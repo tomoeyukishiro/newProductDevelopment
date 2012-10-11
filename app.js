@@ -1,27 +1,4 @@
 var express = require('express');
-var mustache = require('./lib/mustache.js');
-var tmpl = require('./lib/tmpl.js');
-
-var tmpl = {
-    compile: function (source, options) {
-        if (typeof source == 'string') {
-            return function(options) {
-                options.locals = options.locals || {};
-                options.partials = options.partials || {};
-                if (options.body) // for express.js > v1.0
-                    locals.body = options.body;
-                return mustache.to_html(
-                    source, options.locals, options.partials);
-            };
-        } else {
-            return source;
-        }
-    },
-    render: function (template, options) {
-        template = this.compile(template, options);
-        return template(options);
-    }
-};
 
 var app = express.createServer();
 app.configure('development', function() {
@@ -42,13 +19,13 @@ app.configure('development', function() {
   app.use(app.router);
 
   app.set('views', __dirname + '/views');
-  app.set('view options', {layout: false});
-  app.register('.html', tmpl);
+  app.set('view engine', 'ejs');
+  //app.set('view options', {layout: false});
 });
 
 
 app.get('/', function(request, response) {
-  response.render('index.html', {
+  response.render('index', {
     locals: {
       title: 'New Product Development!',
       time: new Date().toString()

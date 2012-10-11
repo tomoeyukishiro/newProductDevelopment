@@ -4,8 +4,7 @@
   "dependencies": {
     "express": "2.5.x",
     "redis-url": "0.1.0",
-    "mu2": "latest",
-    "mu2express": "latest"
+    "ejs": "~0.7.1"
   },
   "engines": {
     "node": "0.8.x",
