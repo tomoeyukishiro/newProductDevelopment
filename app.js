@@ -13,14 +13,12 @@ app.configure('development', function() {
   app.use('/lib/', express.static(__dirname + '/lib'));
   app.use('/css/', express.static(__dirname + '/css'));
 
-  // Views configuration!
-  app.use(express.methodOverride());
-  //app.use(express.bodyDecoder());
   app.use(app.router);
 
+  // Views configuration!
+  app.use(express.methodOverride());
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  //app.set('view options', {layout: false});
 });
 
 
