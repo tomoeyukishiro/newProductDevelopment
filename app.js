@@ -46,7 +46,8 @@ app.configure('development', function() {
 app.get('/', function(request, response) {
   response.render('index.html', {
     locals: {
-      title: 'New Product Development!'
+      title: 'New Product Development!',
+      time: new Date().toString()
     }
   });
 
