@@ -32,6 +32,10 @@ app.configure('development', function() {
     showStack: true
   }));
 
+  // static
+  app.use('/lib/', express.static(__dirname + '/lib'));
+  app.use('/css/', express.static(__dirname + '/css'));
+
   // Views configuration!
   app.use(express.methodOverride());
   //app.use(express.bodyDecoder());
@@ -50,8 +54,6 @@ app.get('/', function(request, response) {
       time: new Date().toString()
     }
   });
-
-  // response.send('Hello World!');
 });
 
 var port = process.env.PORT || 3600;
