@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "2.5.x",
-    "redis-url": "0.1.0"
+    "redis-url": "0.1.0",
+    "mu2": "latest",
+    "mu2express": "latest"
   },
   "engines": {
     "node": "0.8.x",
