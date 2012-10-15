@@ -39,7 +39,7 @@ function makeUser(username, metadata, callback) {
         }
       );
 
-      redis.set(username, user_data);
+      redis.set(username, JSON.stringify(user_data));
       redis.sadd('users', username);
 
       callback();
@@ -53,6 +53,16 @@ function getUsers(callback) {
   });
 }
 
+function getUser(username, callback) {
+  redis.get(username, function(err, value) {
+    if (err) {
+      callback(err, {});
+    }
+    callback(err, JSON.parse(value));
+  });
+}
+
 exports.makeUser = makeUser;
 exports.getUsers = getUsers;
+exports.getUser = getUser;
 
