@@ -1,5 +1,6 @@
 var express = require('express');
 var routes = require('./routes');
+var postRoutes = require('./postroutes');
 
 // connect to our DB
 var url = process.env.REDISTOGO_URL ||
@@ -18,6 +19,7 @@ app.configure('development', function() {
   app.use('/lib/', express.static(__dirname + '/lib'));
   app.use('/css/', express.static(__dirname + '/css'));
 
+  app.use(express.bodyParser());
   app.use(app.router);
 
   // Views configuration!
@@ -29,6 +31,10 @@ app.configure('development', function() {
 
 app.get('/', routes.index);
 app.get('/about', routes.about);
+app.get('/signup', routes.signup);
+app.get('/listusers', routes.listusers);
+
+app.post('/signup', postRoutes.signup);
 
 var port = process.env.PORT || 3600;
 app.listen(port, function() {
