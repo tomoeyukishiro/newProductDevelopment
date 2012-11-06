@@ -50,8 +50,8 @@ function getWaterPathForUser(request, username) {
     'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=peter': 'http://bit.ly/PV0iGH',
     'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=jill': 'http://bit.ly/VRk3fg'
   };
-  if (shortMap[link]) {
-    link = shortMap[link];
+  if (shortenMap[link]) {
+    link = shortenMap[link];
   }
   return link;
 }
