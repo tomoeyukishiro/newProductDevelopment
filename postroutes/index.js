@@ -44,11 +44,15 @@ exports.water_plant = function(request, response) {
 function getWaterPathForUser(request, username) {
   var dest = '/mobile_water_prompt';
   var fullPath = util.request.getHostPath(request) + dest;
-  if (fullPath == 'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt') {
-    // shorten that giant heroku link
-    fullPath = 'http://bitly.com/SLjDbC';
-  }
   var link = fullPath + '?username=' + username;
+
+  var shortenMap = {
+    'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=peter': 'http://bit.ly/PV0iGH',
+    'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=jill': 'http://bit.ly/VRk3fg'
+  };
+  if (shortMap[link]) {
+    link = shortMap[link];
+  }
   return link;
 }
 

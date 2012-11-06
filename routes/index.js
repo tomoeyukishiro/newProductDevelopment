@@ -50,15 +50,9 @@ exports.mobile_home = function(request, response) {
 };
 
 exports.mobile_water_prompt = function(request, response) {
-  var data = _.extend(
-    {
-      username: 'enter_a_user'
-    },
-    {
-      username: request.param('username')
-    }
-  );
-
+  var data = {
+    username: request.param('username') || 'enter_a_user'
+  };
 
   response.render('mobile_water_prompt', data);
 };
