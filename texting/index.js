@@ -1,5 +1,4 @@
-/*
-var TwilioClient = require('twilio').Client;
+var TwilioClient = require('../node-twilio').Client;
 var app = require('../app.js').app;
 var process = require('../app.js').process;
 
@@ -8,8 +7,8 @@ var client = exports.client = new TwilioClient(
   'ac6b5d8f13c3f81753a613f623eb3d9a',
   'radiant-atoll-9524.herokuapp.com/',
   {
-    app: app,
-    port: process.en.port || 3600
+    express: app,
+    //port: process.en.port || 3600
   }
 );
 
@@ -40,5 +39,4 @@ exports.sendTextToUser = function(username, body, callback) {
     });
   });
 }
-*/
 
