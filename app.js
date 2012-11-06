@@ -1,6 +1,4 @@
 var express = require('express');
-var routes = require('./routes');
-var postRoutes = require('./postroutes');
 
 // connect to our DB
 var url = process.env.REDISTOGO_URL ||
@@ -8,7 +6,7 @@ var url = process.env.REDISTOGO_URL ||
 var redis = require('redis-url').connect(url);
 
 var app = exports.app = express.createServer();
-exports.process = process;
+exports.port = process.env.PORT || 3601;
 
 app.configure('development', function() {
   app.use(express.logger());
@@ -29,6 +27,10 @@ app.configure('development', function() {
   app.set('view engine', 'ejs');
 });
 
+
+/*********** Routing ***************/
+var routes = require('./routes');
+var postRoutes = require('./postroutes');
 
 app.get('/', routes.index);
 app.get('/about', routes.about);

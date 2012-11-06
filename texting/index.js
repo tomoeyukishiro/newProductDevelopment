@@ -1,6 +1,12 @@
+// /*
 var TwilioClient = require('../node-twilio').Client;
-var app = require('../app.js').app;
-var process = require('../app.js').process;
+var appModule = require('../app.js');
+
+var app = appModule.app;
+var port = appModule.port;
+if (!port) {
+  throw new Error('need port!');
+}
 
 var client = exports.client = new TwilioClient(
   'AC0097e3ebc6e9c4f7f1fc0fe963ef729c',
@@ -8,7 +14,7 @@ var client = exports.client = new TwilioClient(
   'radiant-atoll-9524.herokuapp.com/',
   {
     express: app,
-    //port: process.en.port || 3600
+    port: port
   }
 );
 
@@ -39,4 +45,6 @@ exports.sendTextToUser = function(username, body, callback) {
     });
   });
 }
+
+// */
 
