@@ -35,13 +35,15 @@ app.get('/signup', routes.signup);
 app.get('/listusers', routes.listusers);
 app.get('/user/:username', routes.user);
 
+// post methods
 app.post('/signup', postRoutes.signup);
+app.post('/water_plant', postRoutes.water_plant);
+app.post('/text_user', postRoutes.text_user);
 
 // mobile stuff
 app.get('/mobile_home', routes.mobile_home);
 app.get('/mobile_water_prompt', routes.mobile_water_prompt);
 app.get('/mobile_water_after', routes.mobile_water_after);
-app.get('/water_plant', postRoutes.water_plant);
 
 var port = process.env.PORT || 3600;
 app.listen(port, function() {

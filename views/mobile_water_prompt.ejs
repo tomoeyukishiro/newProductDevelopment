@@ -3,11 +3,11 @@
 This prompts you to water your plant.
 
   <form action="/water_plant" method="post">
-    <div class="control-group"
+    <div class="control-group">
       <label for="username">
-        Username or plant name (enter whatever you want)
+        Username (or maybe plant name eventually)
       </label>
-      <input name="username" type="text">
+      <input name="username" type="text" value="<%= username%>">
       <input type="submit" value="Water your plant">
     </div>
   </form>

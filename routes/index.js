@@ -1,5 +1,6 @@
 var redis = require('../myredis');
 var db = require('../db');
+var _ = require('underscore');
 
 exports.index = function(request, response) {
   response.render('index');
@@ -49,7 +50,17 @@ exports.mobile_home = function(request, response) {
 };
 
 exports.mobile_water_prompt = function(request, response) {
-  response.render('mobile_water_prompt', {});
+  var data = _.extend(
+    {
+      username: 'enter_a_user'
+    },
+    {
+      username: request.param('username')
+    }
+  );
+
+
+  response.render('mobile_water_prompt', data);
 };
 
 exports.mobile_water_after = function(request, response) {
