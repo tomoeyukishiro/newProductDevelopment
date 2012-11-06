@@ -5,7 +5,10 @@ var client = exports.client = new TwilioClient(
   'AC0097e3ebc6e9c4f7f1fc0fe963ef729c',
   'ac6b5d8f13c3f81753a613f623eb3d9a',
   'radiant-atoll-9524.herokuapp.com/',
-  { app: app }
+  {
+    app: app,
+    port: process.en.port || 3600
+  }
 );
 
 var phone = exports.phone = client.getPhoneNumber('+14085969236');
