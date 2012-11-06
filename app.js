@@ -7,7 +7,7 @@ var url = process.env.REDISTOGO_URL ||
   'redis://petermcottle:36aa6d00c86319b03eb2e2f79cc7573f@drum.redistogo.com:9958/';
 var redis = require('redis-url').connect(url);
 
-var app = express.createServer();
+var app = exports.app = express.createServer();
 
 app.configure('development', function() {
   app.use(express.logger());
