@@ -26,7 +26,11 @@ sudo npm install -g nodemon
 nodemon app.js
 ```
 
-
 ## API endpoints
+
+There are several routes of interest:
+
+```
+
 
 

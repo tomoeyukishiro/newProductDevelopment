@@ -52,7 +52,7 @@ exports.text_user = function(request, response) {
 
   var dest = '/mobile_water_prompt';
   var link = util.request.getHostPath(request) + dest + '?username=' + username;
-  var body = 'Hey ' + username + ', water your plant by following this link: ' + link;
+  var body = 'Hey ' + username + ', water ur plant: ' + link;
 
   texting.sendTextToUser(username, body, function(error, twilioResponse) {
     if (error) {
