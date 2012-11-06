@@ -42,3 +42,18 @@ exports.user = function(request, response) {
   });
 };
 
+
+/************ Mobile ***********/
+exports.mobile_home = function(request, response) {
+  response.render('mobile_home', {});
+};
+
+exports.mobile_water_prompt = function(request, response) {
+  response.render('mobile_water_prompt', {});
+};
+
+exports.mobile_water_after = function(request, response) {
+  // do twilio stuff here TODO
+  response.render('mobile_water_after', {});
+};
+

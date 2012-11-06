@@ -37,6 +37,11 @@ app.get('/user/:username', routes.user);
 
 app.post('/signup', postRoutes.signup);
 
+// mobile stuff
+app.get('/mobile_home', routes.mobile_home);
+app.get('/mobile_water_prompt', routes.mobile_water_prompt);
+app.get('/mobile_water_after', routes.mobile_water_after);
+
 var port = process.env.PORT || 3600;
 app.listen(port, function() {
   console.log('Listening on ' + port);
