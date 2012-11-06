@@ -41,6 +41,17 @@ exports.water_plant = function(request, response) {
   response.send('watering plant...');
 };
 
+function getWaterPathForUser(request, username) {
+  var dest = '/mobile_water_prompt';
+  var fullPath = util.request.getHostPath(request) + dest;
+  if (fullPath == 'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt') {
+    // shorten that giant heroku link
+    fullPath = 'http://bitly.com/SLjDbC';
+  }
+  var link = fullPath + '?username=' + username;
+  return link;
+}
+
 exports.text_user = function(request, response) {
   var users = texting.userToPhone;
 
@@ -50,8 +61,7 @@ exports.text_user = function(request, response) {
     return;
   }
 
-  var dest = '/mobile_water_prompt';
-  var link = util.request.getHostPath(request) + dest + '?username=' + username;
+  var link = getWaterPathForUser(request, username);
   var body = 'Hey ' + username + ', water ur plant: ' + link;
 
   texting.sendTextToUser(username, body, function(error, twilioResponse) {
