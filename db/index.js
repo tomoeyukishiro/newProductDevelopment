@@ -5,10 +5,12 @@ var redis = require('../myredis').redis;
  * user_id // user id
  * users // list of users
  */
+var USERS = 'users';
+var USER_ID = 'user_id';
 
 // now some functions
 
-function makeUser(username, metadata, callback) {
+var makeUser = exports.makeUser = function(username, metadata, callback) {
   if (!username.length) {
     callback('empty username!');
   }
@@ -18,7 +20,7 @@ function makeUser(username, metadata, callback) {
   }
 
   // test if it exists
-  redis.sismember('users', username, function(err, result) {
+  redis.sismember(USERS, username, function(err, result) {
     if (err) {
       callback(err);
     }
@@ -30,7 +32,7 @@ function makeUser(username, metadata, callback) {
     console.log('making user ', username);
 
     // first userid increment
-    redis.incr('user_id', function(err, user_id) {
+    redis.incr(USER_ID, function(err, user_id) {
       var user_data = _.extend(
         {},
         metadata,
@@ -40,29 +42,31 @@ function makeUser(username, metadata, callback) {
       );
 
       redis.set(username, JSON.stringify(user_data));
-      redis.sadd('users', username);
+      redis.sadd(USERS, username);
 
       callback();
     });
   });
-}
+};
 
-function getUsers(callback) {
-  redis.smembers('users', function(err, users) {
+var getUsers = exports.getUsers = function(callback) {
+  redis.smembers(USERS, function(err, users) {
     callback(err, users);
   });
-}
+};
 
-function getUser(username, callback) {
+var getUser = exports.getUser = function(username, callback) {
   redis.get(username, function(err, value) {
     if (err) {
       callback(err, {});
     }
     callback(err, JSON.parse(value));
   });
-}
+};
 
-exports.makeUser = makeUser;
-exports.getUsers = getUsers;
-exports.getUser = getUser;
+var deleteUser = exports.deleteUser = function(username) {
+  redis.del(username);
+  redis.srem(USERS, username);
+};
+
 
