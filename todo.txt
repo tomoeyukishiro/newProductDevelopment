@@ -1,0 +1,24 @@
+TODO:
+
+queue endpoints for watering. basically a redis boolean key. polling the endpoint does logic on when to text.
+  - if dry enough and haven't texted user in a while, text user
+  - go check if there is a water boolean in this queue
+
+  - if so, return true and record that we watered. otherwise, false
+
+water_plant endpoint:
+  - puts in a "true" boolean into the water queue for this plant. also records when it was enqueued
+
+user support for owning "plants"
+
+cookie storage, does username and then falls through to cookie
+
+mobile app pages:
+- my account (see all plants and their names). each entry in list goes to a plant
+- plant view -- adjust dryness wanted here. see when last watered?
+- water prompt (to water a specific plant maybe? just first for now)
+- after water (yay, you have watered your plant. show history? last time watered? water dates array?)
+
+extra credit:
+- bitly shortening automagically!
+

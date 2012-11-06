@@ -31,6 +31,7 @@ app.configure('development', function() {
 /*********** Routing ***************/
 var routes = require('./routes');
 var postRoutes = require('./postroutes');
+// require routes after starting up server so node-twilio doesn't make a new express server on a random port.
 
 app.get('/', routes.index);
 app.get('/about', routes.about);

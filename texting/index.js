@@ -1,4 +1,3 @@
-// /*
 var TwilioClient = require('../node-twilio').Client;
 var appModule = require('../app.js');
 
@@ -45,6 +44,4 @@ exports.sendTextToUser = function(username, body, callback) {
     });
   });
 }
-
-// */
 
