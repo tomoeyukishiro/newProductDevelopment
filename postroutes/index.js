@@ -33,3 +33,9 @@ exports.signup = function(request, response) {
   });
 };
 
+exports.water_plant = function(request, response) {
+  // twilio stuff
+
+  response.send('watering plant...');
+};
+

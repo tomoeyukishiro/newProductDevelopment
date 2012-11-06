@@ -1,9 +1,16 @@
-
 <p>
 
 This prompts you to water your plant.
 
-<a href="/mobile_water_after">Water your plant</a>
+  <form action="/water_plant" method="post">
+    <div class="control-group"
+      <label for="username">
+        Username or plant name (enter whatever you want)
+      </label>
+      <input name="username" type="text">
+      <input type="submit" value="Water your plant">
+    </div>
+  </form>
 
 </p>
 

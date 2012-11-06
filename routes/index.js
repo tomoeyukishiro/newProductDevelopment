@@ -53,7 +53,6 @@ exports.mobile_water_prompt = function(request, response) {
 };
 
 exports.mobile_water_after = function(request, response) {
-  // do twilio stuff here TODO
   response.render('mobile_water_after', {});
 };
 
