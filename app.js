@@ -8,6 +8,7 @@ var url = process.env.REDISTOGO_URL ||
 var redis = require('redis-url').connect(url);
 
 var app = exports.app = express.createServer();
+exports.process = process;
 
 app.configure('development', function() {
   app.use(express.logger());

@@ -1,5 +1,7 @@
+/*
 var TwilioClient = require('twilio').Client;
 var app = require('../app.js').app;
+var process = require('../app.js').process;
 
 var client = exports.client = new TwilioClient(
   'AC0097e3ebc6e9c4f7f1fc0fe963ef729c',
@@ -38,4 +40,5 @@ exports.sendTextToUser = function(username, body, callback) {
     });
   });
 }
+*/
 
