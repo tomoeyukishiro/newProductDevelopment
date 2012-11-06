@@ -5,8 +5,8 @@
     "express": "2.5.x",
     "redis-url": "0.1.0",
     "ejs": "~0.7.1",
-    "underscore": "latest",
-    "twilio": "latest"
+    "underscore": "latest"
+    //"twilio": "latest"
   },
   "engines": {
     "node": "0.8.x",
