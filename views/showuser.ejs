@@ -17,7 +17,11 @@
       <ul>
         <% for (var i = 0; i < data.plants.length; i++) { %>
           <li>
-            Name:  <%= data.plants[i].name %>
+            <a href="/plant/<%=data.plants[i].username%>"> <%= data.plants[i].name %> </a>
+            <form action="/delete_plant" method="post" style="display:inline-block;">
+              <input name="plant_username" type="hidden" value="<%=data.plants[i].username%>">
+              <input type="submit" value="Delete Plant" style="background:red;color:white">
+            </form>
           </li>
         <% } %>
       </ul>
