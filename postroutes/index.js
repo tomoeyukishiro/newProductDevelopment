@@ -51,6 +51,26 @@ exports.delete_user = function(request, response) {
   });
 };
 
+exports.delete_plant = function(request, response) {
+  var plant_username = request.param('plant_username');
+  if (!plant_username) {
+    response.render('signup', {
+      error: 'Bad plant usnerame' + String(plant_username)
+    });
+    return;
+  }
+
+  db.deletePlant(plant_username, function(err) {
+    if (err) {
+      response.render('signup', {
+        error: String(err)
+      });
+      return;
+    }
+    routes.listplants(request, response);
+  });
+};
+
 exports.make_plant = function(request, response) {
   var owner = request.param('owner');
   var plant_name = request.param('name');
@@ -69,7 +89,7 @@ exports.make_plant = function(request, response) {
       });
       return;
     }
-    routes.listusers(request, response);
+    routes.user(request, response, owner);
   });
 };
 

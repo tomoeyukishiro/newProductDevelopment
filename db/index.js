@@ -131,6 +131,23 @@ var addPlantToUser = function(plant_username, owner_username, plant_data, callba
   });
 };
 
+var removePlantFromUser = function(plant_username, owner_username) {
+  getUser(owner_username, function(err, user_data) {
+    if (!user_data) {
+      console.log('no user data for username', owner_username);
+      return;
+    }
+    var newPlants = [];
+    _.each(user_data.plants, function(plant) {
+      if (plant.username !== plant_username) {
+        newPlants.push(plant);
+      }
+    });
+    user_data.plants = newPlants;
+    storeUser(owner_username, user_data);
+  });
+};
+
 var makePlant = exports.makePlant = function(plant_name, owner_username, callback) {
   var plant_username = getPlantID(plant_name);
   var owner_username = getUserID(owner_username); // just in case
@@ -170,7 +187,8 @@ var makePlant = exports.makePlant = function(plant_name, owner_username, callbac
           {
             id: plantID,
             name: plant_name,
-            username: plant_username
+            username: plant_username,
+            owner: owner_username
           }
         );
         redis.set(plant_username, JSON.stringify(plant_data));
@@ -186,9 +204,15 @@ var makePlant = exports.makePlant = function(plant_name, owner_username, callbac
   });
 };
 
-var getUsers = exports.getAllUsers = function(callback) {
+var getAllUsers = exports.getAllUsers = function(callback) {
   redis.smembers(USERS, function(err, users) {
     callback(err, users);
+  });
+};
+
+var getAllPlants = exports.getAllPlants = function(callback) {
+  redis.smembers(PLANTS, function(err, plants) {
+    callback(err, plants);
   });
 };
 
@@ -201,7 +225,32 @@ var isUser = exports.isUser = function(nameOrUsername, callback) {
   });
 };
 
+var printUser = exports.printUser = function(username) {
+  var username = getUserID(username);
+  printGeneral(username, 'User');
+};
+
+var printGeneral = function(key, type) {
+  redis.get(key, function(err, val) {
+    if (err) {
+      console.log('error!: ', err);
+      return;
+    }
+    console.log(type, key);
+    console.log(val);
+  });
+};
+
 var getUser = exports.getUser = function(username, callback) {
+  redis.get(username, function(err, value) {
+    if (err) {
+      callback(err, {});
+    }
+    callback(err, JSON.parse(value));
+  });
+};
+
+var getPlant = exports.getPlant = function(username, callback) {
   redis.get(username, function(err, value) {
     if (err) {
       callback(err, {});
@@ -213,6 +262,23 @@ var getUser = exports.getUser = function(username, callback) {
 var storeUser = function(username, data) {
   console.log('setting user', username, ' data to', data);
   redis.set(username, JSON.stringify(data));
+};
+
+var deletePlant = exports.deletePlant = function(plant_username, callback) {
+  console.log('deleting plant', plant_username);
+
+  getPlant(plant_username, function(err, plant_data) {
+    var owner = plant_data.owner;
+    removePlantFromUser(plant_username, owner);
+
+    deletePlantEntry(plant_username);
+    callback();
+  });
+};
+
+var deletePlantEntry = function(plant_username) {
+  redis.del(plant_username);
+  redis.srem(PLANTS, plant_username);
 };
 
 var deleteUser = exports.deleteUser = function(username, callback) {
@@ -227,7 +293,7 @@ var deleteUser = exports.deleteUser = function(username, callback) {
         return;
       }
 
-      console.log('deleting plant', plant_username);
+      deletePlantEntry(plant_username);
 
       redis.del(plant_username);
       redis.srem(PLANTS, plant_username);

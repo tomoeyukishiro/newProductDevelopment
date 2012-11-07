@@ -1,0 +1,35 @@
+<%- partial('navbar.ejs') %>
+
+<div class="hero-unit">
+  <h1>
+    User: <%= name %>
+  </h1>
+</div>
+
+<div class="row-fluid">
+  <div class="span8">
+    <p> Data </p>
+    <p>
+      <%= dataString %>
+    </p>
+
+    <h2> Plants this user owns: </h2>
+      <ul>
+        <% for (var i = 0; i < data.plants.length; i++) { %>
+          <li>
+            Name:  <%= data.plants[i].name %>
+          </li>
+        <% } %>
+      </ul>
+    <h2> Make a plant for this user </h2>
+
+      <form action="/make_plant" method="post" style="display:inline-block;">
+        <input name="owner" type="hidden" value="<%=username%>">
+        <input name="name" type="text">
+        <input type="submit" value="Make Plant For <%=name%>" style="background:blue;color:white">
+      </form>
+  </div>
+</div>
+
+ <%- partial('footer.ejs') %>
+ 

@@ -30,8 +30,19 @@ exports.listusers = function(request, response) {
   });
 };
 
-exports.user = function(request, response) {
-  var username = request.param('username');
+exports.listplants = function(request, response) {
+  db.getAllPlants(function(err, plants) {
+    if (err) {
+      plants = [];
+    }
+    response.render('listplants', {
+      plants: plants
+    });
+  });
+};
+
+exports.user = function(request, response, username) {
+  var username = request.param('username') || username;
   console.log('the username', username);
 
   db.getUser(username, function(err, data) {
@@ -41,6 +52,21 @@ exports.user = function(request, response) {
       name: data.name,
       data: data,
       dataString: JSON.stringify(data)
+    });
+  });
+};
+
+exports.plant = function(request, response) {
+  var plant_username = request.param('plantname');
+  console.log('the plantname', plant_username);
+
+  db.getPlant(plant_username, function(err, data) {
+    response.render('showplant', {
+      error: err,
+      username: plant_username,
+      name: data.name,
+      dataString: JSON.stringify(data),
+      data: data
     });
   });
 };
