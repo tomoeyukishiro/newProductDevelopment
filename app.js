@@ -44,6 +44,7 @@ app.post('/signup', postRoutes.signup);
 app.post('/water_plant', postRoutes.water_plant);
 app.post('/text_user', postRoutes.text_user);
 app.post('/delete_user', postRoutes.delete_user);
+app.post('/make_plant', postRoutes.make_plant);
 
 // mobile stuff
 app.get('/mobile_home', routes.mobile_home);

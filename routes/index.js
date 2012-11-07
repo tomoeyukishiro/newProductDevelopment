@@ -35,11 +35,13 @@ exports.user = function(request, response) {
   console.log('the username', username);
 
   db.getUser(username, function(err, data) {
-    response.send(JSON.stringify({
-        error: err,
-        username: username,
-        data: data
-    }));
+    response.render('showuser', {
+      error: err,
+      username: username,
+      name: data.name,
+      data: data,
+      dataString: JSON.stringify(data)
+    });
   });
 };
 

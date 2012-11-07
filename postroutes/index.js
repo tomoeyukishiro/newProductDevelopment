@@ -51,6 +51,28 @@ exports.delete_user = function(request, response) {
   });
 };
 
+exports.make_plant = function(request, response) {
+  var owner = request.param('owner');
+  var plant_name = request.param('name');
+
+  if (!owner || !plant_name) {
+    response.render('signup', {
+      error: 'no owner or plant anme specified!'
+    });
+    return;
+  }
+
+  db.makePlant(plant_name, owner, function(err) {
+    if (err) {
+      response.render('signup', {
+        error: String(err)
+      });
+      return;
+    }
+    routes.listusers(request, response);
+  });
+};
+
 exports.water_plant = function(request, response) {
   // queue stuff...
 
