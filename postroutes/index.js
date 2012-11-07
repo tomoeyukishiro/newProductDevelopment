@@ -4,24 +4,19 @@ var routes = require('../routes');
 var util = require('../util');
 
 exports.signup = function(request, response) {
-  var username = request.param('username');
-
-  if (!username) {
+  var name = request.param('name');
+  if (!name) {
     console.log('RENDERING ERROR PAGE');
     response.render('signup', {
-      error: "No Username Specified!"
+      error: "No name Specified!"
     });
     return;
   }
 
-  console.log('Received signup for username: ', username);
+  console.log('Received signup for name: ', name);
 
-  var now = new Date().toString();
-
-  db.makeUser(username, {
-      createTime: now
-    }, function(err) {
-      console.log('in callback');
+  var metadata = {};
+  db.makeUser(name, metadata, function(err) {
       if (err) {
         console.log('err on signup', err);
         response.render('signup', {
@@ -35,8 +30,29 @@ exports.signup = function(request, response) {
   });
 };
 
+exports.delete_user = function(request, response) {
+  var username = request.param('username');
+  if (!username) {
+    // TODO different parent
+    response.render('signup', {
+      error: 'No username for delete!'
+    });
+    return;
+  }
+
+  db.deleteUser(username, function(err) {
+    if (err) {
+      response.render('signup', {
+        error: String(err)
+      });
+      return;
+    }
+    routes.listusers(request, response);
+  });
+};
+
 exports.water_plant = function(request, response) {
-  // twilio stuff
+  // queue stuff...
 
   response.send('watering plant...');
 };

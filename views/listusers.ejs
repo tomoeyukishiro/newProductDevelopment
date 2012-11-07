@@ -23,6 +23,10 @@
           <a href="/user/<%=users[i]%>">
             <%= users[i] %>
           </a>
+          <form action="/delete_user" method="post" style="display:inline-block;">
+            <input name="username" type="hidden" value="<%=users[i]%>">
+            <input type="submit" value="Delete User" style="background:red;color:white">
+          </form>
         </li>
       <% } %>
     </ul>

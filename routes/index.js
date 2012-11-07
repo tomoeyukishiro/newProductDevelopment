@@ -16,7 +16,7 @@ exports.signup = function(request, response) {
 
 exports.listusers = function(request, response) {
   
-  db.getUsers(function(err, users) {
+  db.getAllUsers(function(err, users) {
     var additionalMessage = '';
     if (!users) {
       users = [];

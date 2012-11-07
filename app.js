@@ -6,7 +6,7 @@ var url = process.env.REDISTOGO_URL ||
 var redis = require('redis-url').connect(url);
 
 var app = exports.app = express.createServer();
-exports.port = process.env.PORT || 3601;
+exports.port = process.env.PORT || 3600;
 
 app.configure('development', function() {
   app.use(express.logger());
@@ -43,6 +43,7 @@ app.get('/user/:username', routes.user);
 app.post('/signup', postRoutes.signup);
 app.post('/water_plant', postRoutes.water_plant);
 app.post('/text_user', postRoutes.text_user);
+app.post('/delete_user', postRoutes.delete_user);
 
 // mobile stuff
 app.get('/mobile_home', routes.mobile_home);
