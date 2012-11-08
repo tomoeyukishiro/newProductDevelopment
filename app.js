@@ -49,6 +49,9 @@ app.post('/delete_user', postRoutes.delete_user);
 app.post('/make_plant', postRoutes.make_plant);
 app.post('/delete_plant', postRoutes.delete_plant);
 
+// POST method as a Get, hacky but easier for arduino
+app.get('/check_and_record', postRoutes.check_and_record);
+
 // mobile stuff
 app.get('/mobile_home', routes.mobile_home);
 app.get('/mobile_water_prompt', routes.mobile_water_prompt);

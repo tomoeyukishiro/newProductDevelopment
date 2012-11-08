@@ -21,12 +21,15 @@ var phone = exports.phone = client.getPhoneNumber('+14085969236');
 
 var userToPhone = exports.userToPhone = {
   peter: '14084559405',
-  jill: '14258947762'
+  jill: '14258947762',
+  peter_cottle: '14084559405',
+  jill_schweitzer: '14258947762'
 };
 
 exports.sendTextToUser = function(username, body, callback) {
   if (!userToPhone[username]) {
     callback('A phone number for that user doesnt exist!');
+    console.log('WARNING no number for ', username);
     return;
   }
 

@@ -95,8 +95,62 @@ exports.make_plant = function(request, response) {
 
 exports.water_plant = function(request, response) {
   // queue stuff...
+  var plant_username = request.param('plant_username');
+  if (!plant_username) {
+    console.log('WARNING assuming plant username of plant-jack');
+    plant_username = 'plant-jack';
+  }
 
-  response.send('watering plant...');
+  // need to set the field
+  db.setPlantShouldWater(plant_username, true, function(err) {
+    if (err) { response.send(String(err)); return; }
+
+    response.send('Set plant water boolean for ' + plant_username);
+  });
+};
+
+exports.check_and_record = function(request, response) {
+  var plant_username = request.param('plant_username');
+  if (!plant_username) {
+    console.log('WARNING: assuming plant username of plant-jack');
+    plant_username = 'plant-jack';
+  }
+
+  var moisture_level = request.param('moisture');
+  if (!moisture_level) {
+    response.render('signup', {
+      error: 'no moisture key given!'
+    });
+    return;
+  }
+
+  // do two things -- first add this data point
+  // TODO
+
+  // then compare against threshold
+  db.getPlant(plant_username, function(err, plantData) {
+
+    console.log('comparing moisture level of', moisture_level, 'to thres', plantData.moistureThreshold);
+    if (Number(moisture_level) < Number(plantData.moistureThreshold)) {
+      // here we text the user
+      console.log('its TOO DRY go text ');
+      sendWaterTextToUser(plantData.owner, request);
+      db.setPlantNeedsWater(plant_username, true, function() {});
+    }
+
+    // here we return the boolean if it should water or not
+    if (plantData.shouldWater) {
+      db.setPlantShouldWater(plant_username, false, function(err) {
+        if (err) { response.send(String(err)); return; }
+
+        // now we send a true to make arduino water
+        response.send('true');
+      });
+      return;
+    }
+    // otherwise its easy, just send false
+    response.send('false');
+  });
 };
 
 function getWaterPathForUser(request, username) {
@@ -123,10 +177,20 @@ exports.text_user = function(request, response) {
     return;
   }
 
+  sendWaterTextToUser(username, request);
+};
+
+var sendWaterTextToUser = function(username, request, response) {
   var link = getWaterPathForUser(request, username);
   var body = 'Hey ' + username + ', water ur plant: ' + link;
+  console.log('texting user', username, 'the body', body);
 
   texting.sendTextToUser(username, body, function(error, twilioResponse) {
+    if (!response) {
+      // sometimes we want to just dump this
+      return;
+    }
+
     if (error) {
       response.send('there was an error!' + JSON.stringify(error));
       return;

@@ -47,7 +47,8 @@ var USER_SCHEMA = {
   id: null,
   createTime: null,
   name: null,
-  username: null
+  username: null,
+  phoneNumber: null
 };
 
 /* Plants is in the form of
@@ -63,8 +64,10 @@ var PLANT_SCHEMA = {
   username: null, // key for redis
   owner: null, // username of owner
   id: null,    // number for uniqueness
-  shouldWater: false, // boolean if we should water,
-  createTime: null
+  shouldWater: false, // boolean if we should water, based on the user confirming
+  createTime: null,
+  moistureThreshold: 700, // if its below this, we should water
+  needsWater: false // this is based off of moisture level reading
 };
 
 
@@ -246,7 +249,11 @@ var getUser = exports.getUser = function(username, callback) {
     if (err) {
       callback(err, {});
     }
-    callback(err, JSON.parse(value));
+    var user_data = _.extend(
+      USER_SCHEMA,
+      JSON.parse(value)
+    );
+    callback(null, user_data);
   });
 };
 
@@ -255,8 +262,34 @@ var getPlant = exports.getPlant = function(username, callback) {
     if (err) {
       callback(err, {});
     }
-    callback(err, JSON.parse(value));
+    callback(null, _.extend(
+      PLANT_SCHEMA,
+      JSON.parse(value)
+    ));
   });
+};
+
+var setPlantShouldWater = exports.setPlantShouldWater = function(plant_username, value, callback) {
+  setPlantGeneral(plant_username, 'shouldWater', value, callback);
+};
+
+var setPlantNeedsWater = exports.setPlantNeedsWater = function(plant_username, value, callback) {
+  setPlantGeneral(plant_username, 'needsWater', value, callback);
+};
+
+var setPlantGeneral = function(plant_username, key, value, callback) {
+  getPlant(plant_username, function(err, plant_data) {
+    if (err) { callback(err); return; }
+
+    plant_data[key] = value;
+    storePlant(plant_username, plant_data);
+    callback(null);
+  });
+};
+
+var storePlant = function(plant_username, data) {
+  console.log('setting plant to', plant_username, 'data to', data);
+  redis.set(plant_username, JSON.stringify(data));
 };
 
 var storeUser = function(username, data) {
