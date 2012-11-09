@@ -1,27 +1,25 @@
+<%- partial('standard_topbar.ejs') %>
+
+<div class="content-padded">
+
 <ul class="list inset">
   <li>
-    <a href="http://maker.github.com/ratchet/">
-      <strong>Ratchet documentation</strong>
-      <span class="chevron"></span>
-    </a>
-  </li>
-  <li>
-    <a href="http://www.github.com/maker/ratchet/">
-      <strong>Ratchet on Github</strong>
-      <span class="chevron"></span>
-    </a>
-  </li>
-  <li>
-    <a href="https://groups.google.com/forum/#!forum/goratchet">
-      <strong>Ratchet Google group</strong>
-      <span class="chevron"></span>
-    </a>
-  </li>
-  <li>
-    <a href="http://www.twitter.com/GoRatchet">
-      <strong>Ratchet on Twitter</strong>
+    <a href="/listusers" data-transition="slide-in">
+      <strong>Users</strong>
       <span class="chevron"></span>
     </a>
   </li>
 </ul>
-    
+
+</div>
+
+<script type="text/javascript">
+
+window.addEventListener('push', function() {
+  console.log('did push');
+  console.log(arguments);
+});
+
+</script>
+
+<%- partial('standard_footer.ejs') %>

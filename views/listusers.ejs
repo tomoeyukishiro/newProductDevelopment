@@ -1,38 +1,32 @@
-<%- partial('navbar.ejs') %>
+<%- partial('standard_topbar.ejs') %>
 
-<div class="hero-unit">
-  <h1>
+<div class="content-padded">
+
+<h1 style="padding:10px;">
     Our Awesome Users:
-  </h1>
-</div>
+</h1>
 
-<div class="row-fluid">
-  <div class="span8">
-    <div>
-      <h2>
-        Current users
-      </h2>
 
-    <div class="error" style="background:green; color:white">
-      <%= additionalMessage %>
-    </div>
+<ul class="list inset">
+  <% for (var i = 0; i < users.length; i++) { %>
+    <li>
+      <a href="/user/<%=users[i]%>">
+        <strong>
+          <%= users[i] %>
+        </strong>
+        <span class="chevron"></span>
+      </a>
 
-    <ul>
-      <% for (var i = 0; i < users.length; i++) { %>
-        <li>
-          <a href="/user/<%=users[i]%>">
-            <%= users[i] %>
-          </a>
-          <form action="/delete_user" method="post" style="display:inline-block;">
-            <input name="username" type="hidden" value="<%=users[i]%>">
-            <input type="submit" value="Delete User" style="background:red;color:white">
-          </form>
-        </li>
-      <% } %>
-    </ul>
+      <div style="display:none">
+        <form action="/delete_user" method="post" style="display:inline-block;">
+          <input name="username" type="hidden" value="<%=users[i]%>">
+          <input type="submit" value="Delete User" style="background:red;color:white">
+        </form>
+      </div>
 
-  </div>
-</div>
+    </li>
+  <% } %>
+</ul>
 
  <%- partial('footer.ejs') %>
  
