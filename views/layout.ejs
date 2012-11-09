@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8">
-    <title>New Product Development</title>
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
-      </script>
-    <![endif]-->
+    <title>Ratchet template page</title>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"/>
-  </head>
+    <!-- Sets initial viewport load and disables zooming  -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 
-  <body>
-          
-        <%- body %>
+    <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
+    <!-- Set Apple icons for when prototype is saved to home screen -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/lib/touch-icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/lib/touch-icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/lib/touch-icons/apple-touch-icon-57x57.png">
 
+    <!-- Include the compiled Ratchet CSS -->
+    <link rel="stylesheet" href="/css/ratchet.css">
+
+    <!-- Include the compiled Ratchet JS -->
+    <script src="/lib/ratchet.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="/lib/bootstrap.min.js"></script>
+  </head>
+  <body>
+
+  <!-- Make sure all your bars are the first things in your <body> -->
+  <!--
+  <header class="bar-title">
+    <h1 class="title">GreenThumb</h1>
+  </header>
+  -->
+  <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+
+        <%- body %>
 
   </body>
 </html>

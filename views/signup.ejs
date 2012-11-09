@@ -1,36 +1,36 @@
-<%- partial('navbar.ejs') %>
+<%- partial('standard_topbar.ejs') %>
 
-<div class="hero-unit">
-  <h1>
+<div class="content-padded">
+
+<h1 style="padding:10px;">
     Sign on up!
-  </h1>
-</div>
+</h1>
 
-<div class="row-fluid">
-  <div class="span8">
-    <div>
-      <h2>
-        Sign on up!
-      </h2>
-
-  <div class="error" style="background:red; color:white">
+<% if (error) { %>
+  <div style="background:red;color:white;font-weight:bold;padding:5px;margin:5px;">
     <%= error %>
   </div>
+<% } %>
 
-  <form action="/signup" method="post">
-    <div class="control-group">
-      <label for="name">
-        Name:
-      </label>
-      <input name="name" type="text">
-      <input type="submit" value="Sign Up!">
-    </div>
-  </form>
-
-    </div>
+<form id="signup" method="post" action="/signup">
+  <div class="input-group">
+    <input type="text" name="name" placeholder="Full name"/>
+    <input type="tel" name="phone" placeholder="Phone"/>
   </div>
+</form>
+
+<a id="signupbutton" class="button-positive button-block">Signup</a>
+
+<script type="text/javascript">
+
+// submit the form when the button is clicked
+$(document).ready(function() {
+  $('#signupbutton').click(function() {
+    $('#signup').submit();
+  });
+});
+
+</script>
 </div>
 
- <%- partial('footer.ejs') %>
- 
- 
+<%- partial('standard_footer.ejs') %>

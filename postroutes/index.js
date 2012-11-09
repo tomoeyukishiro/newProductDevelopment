@@ -5,16 +5,34 @@ var util = require('../util');
 
 exports.signup = function(request, response) {
   var name = request.param('name');
+  var phone = request.param('phone');
+
+  // quick phone validation
+  phone = phone.replace(/[(\- )]/g, '');
+  if (phone.slice(0,1) !== '1') {
+    phone = '1' + phone;
+  }
+
   if (!name) {
-    console.log('RENDERING ERROR PAGE');
     response.render('signup', {
       error: "No name Specified!"
     });
     return;
   }
+  if (!phone) {
+    response.render('signup', {
+      error: 'No phone (or invalid phone) specified!'
+    });
+    return;
+  }
+  if (!texting.validPhones[phone]) {
+    response.render('signup', {
+      error: 'That phone number is not validated! Ask Peter to validate your phone with twilio'
+    });
+    return;
+  }
 
   console.log('Received signup for name: ', name);
-
   var metadata = {};
   db.makeUser(name, metadata, function(err) {
       if (err) {
@@ -132,16 +150,20 @@ exports.check_and_record = function(request, response) {
 
     console.log('comparing moisture level of', moisture_level, 'to thres', plantData.moistureThreshold);
     if (Number(moisture_level) < Number(plantData.moistureThreshold)) {
-      // here we text the user
-      console.log('its TOO DRY go text ');
-      sendWaterTextToUser(plantData.owner, request);
-      db.setPlantNeedsWater(plant_username, true, function() {});
+      console.log('Its too dry!');
+      // only text if we haven't texted before, inferred by the 'needs water' thing
+      if (!plantData.needsWater) {
+        sendWaterTextToUser(plantData.owner, request);
+        db.setPlantNeedsWater(plant_username, true, function() {});
+      }
     }
 
     // here we return the boolean if it should water or not
     if (plantData.shouldWater) {
       db.setPlantShouldWater(plant_username, false, function(err) {
         if (err) { response.send(String(err)); return; }
+        // also say it doesnt need water anymore
+        db.setPlantNeedsWater(plant_username, false, function() {});
 
         // now we send a true to make arduino water
         response.send('true');
