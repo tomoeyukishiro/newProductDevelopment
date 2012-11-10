@@ -33,7 +33,9 @@ exports.signup = function(request, response) {
   }
 
   console.log('Received signup for name: ', name);
-  var metadata = {};
+  var metadata = {
+    phoneNumber: phone
+  };
   db.makeUser(name, metadata, function(err) {
       if (err) {
         console.log('err on signup', err);

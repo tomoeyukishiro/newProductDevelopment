@@ -77,7 +77,7 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
   if (!username || !username.length) {
     callback('empty username!');
   }
-  console.log('name is', name, 'username', username);
+  console.log('making user', username, 'and metadata', metadata, 'user schema', USER_SCHEMA);
 
   if (!isValidUsername(username)) {
     callback('bad username!');
@@ -106,7 +106,8 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
           userID: userID,
           name: name,
           username: username,
-          createTime: new Date().toString()
+          createTime: new Date().toString(),
+          plants: []
         }
       );
 
@@ -119,6 +120,7 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
 };
 
 var addPlantToUser = function(plant_username, owner_username, plant_data, callback) {
+  console.log('adding plant', plant_username, 'to this owner', owner_username, plant_data);
   getUser(owner_username, function(err, user_data) {
     if (err) {
       callback(err);

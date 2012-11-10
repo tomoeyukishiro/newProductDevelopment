@@ -1,5 +1,6 @@
 var TwilioClient = require('../node-twilio').Client;
 var appModule = require('../app.js');
+var db = require('../db');
 
 // grab the express app and port so twilio client doesnt make a new server
 // which throws on heroku due to port binding
@@ -27,31 +28,30 @@ var client = exports.client = new TwilioClient(
 );
 var phone = exports.phone = client.getPhoneNumber('+14085969236');
 
-var userToPhone = exports.userToPhone = {
-  peter: '14084559405',
-  jill: '14258947762',
-  peter_cottle: '14084559405',
-  jill_schweitzer: '14258947762'
-};
-
 exports.sendTextToUser = function(username, body, callback) {
-  if (!userToPhone[username]) {
-    callback('A phone number for that user doesnt exist!');
-    console.log('WARNING no number for ', username);
-    return;
-  }
+  db.getUser(username, function(err, userData) {
+    if (err) {
+      callback(err);
+      return;
+    }
+    if (!userData || !userData.phoneNumber) {
+      callback('A phone number for that user doesnt exist!');
+      console.log('WARNING no number for ', username);
+      return;
+    }
+    var phoneNumber = userData.phoneNumber;
 
-  phone.setup(function() {
-    // now phone works
-    var phoneNumber = userToPhone[username];
-    var options = {};
+    phone.setup(function() {
+      // now phone works
+      var options = {};
 
-    phone.sendSms(phoneNumber, body, options, function(reqParams, response) {
-      console.log('sent text, req params');
-      console.log(reqParams);
-      console.log('response was');
-      console.log(response);
-      callback(null, response);
+      phone.sendSms(phoneNumber, body, options, function(reqParams, response) {
+        console.log('sent text, req params');
+        console.log(reqParams);
+        console.log('response was');
+        console.log(response);
+        callback(null, response);
+      });
     });
   });
 }

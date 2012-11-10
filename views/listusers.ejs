@@ -1,4 +1,4 @@
-<%- partial('standard_topbar.ejs') %>
+<%- partial('onedeep_topbar.ejs') %>
 
 <div class="content-padded">
 
@@ -10,7 +10,7 @@
 <ul class="list inset">
   <% for (var i = 0; i < users.length; i++) { %>
     <li>
-      <a href="/user/<%=users[i]%>">
+      <a href="/user/<%=users[i]%>" data-transition="slide-in">
         <strong>
           <%= users[i] %>
         </strong>

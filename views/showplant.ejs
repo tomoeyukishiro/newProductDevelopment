@@ -1,4 +1,6 @@
-<%- partial('navbar.ejs') %>
+<%- partial('standard_topbar.ejs') %>
+
+<div class="content-padded">
 
 <h1>
 	Plant: <%= name %>
@@ -8,9 +10,24 @@
   <%= dataString %>
 </p>
 
-<form action="/delete_plant" method="post" style="display:none;">
+<form id="plantDeleteForm_<%=username%>" action="/delete_plant" method="post" style="display:none;">
 	<input name="plant_username" type="hidden" value="<%=username%>">
 </form>
 
- <%- partial('footer.ejs') %>
- 
+<p style="margin:20px">
+	<div id="dryPlantButton"
+	data-username="<%=username%>" 
+	data-owner="<%=data.owner%>"
+	class="button-positive button-block">
+		Pretend Plant is dry (and text owner)
+	</div>
+</p>
+
+<p style="margin:20px">
+	<div id="deletePlantButton" data-owner="<%=username%>" class="button-negative button-block">
+		Delete Plant
+	</div>
+</p>
+
+</div>
+<%- partial('standard_footer.ejs') %>

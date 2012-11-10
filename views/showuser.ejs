@@ -1,4 +1,12 @@
-<%- partial('standard_topbar.ejs') %>
+<header class="bar-title">
+  <a class="button-prev" href="/listusers" data-transition="slide-out">
+  Users
+  </a>
+  <h1 class="title">GreenThumb</h1>
+</header>
+
+<div class="content"> 
+
 
 <div class="content-padded">
 
@@ -12,7 +20,7 @@
 <ul class="list inset">
   <% for (var i = 0; i < data.plants.length; i++) { %>
     <li>
-      <a href="/plant/<%=data.plants[i].username%>">
+      <a href="/plant/<%=data.plants[i].username%>" data-transition="slide-in">
         <%= data.plants[i].name %>
       </a>
       <span class="chevron"></span>
@@ -22,29 +30,27 @@
 
 <h2> Make a plant for this user </h2>
 
-<form id="make_plant_form" action="/make_plant" method="post">
+<form id="make_plant_form_<%=username%>" action="/make_plant" method="post">
   <div class="input-group">
     <input name="owner" type="hidden" value="<%=username%>">
     <input name="name" type="text" placeholder="Name of Plant">
   </div>
 </form>
 
-<div id="makebutton" class="button-main button-block">Make Plant</div>
+<div id="makebutton" data-owner="<%=username%>" class="button-main button-block">Make Plant</div>
 
-  <p> Data </p>
-  <p>
-    <%= dataString %>
-  </p>
+<p> Data </p>
+<p>
+  <%= dataString %>
+</p>
 
-
-<form id="delete_form" action="/delete_user" method="post">
+<form id="delete_form_<%=username%>" action="/delete_user" method="post">
   <div class="input-group">
     <input name="username" type="hidden" value="<%=username%>">
   </div>
 </form>
 
-<div id="deletebutton" class="button-negative button-block">Delete User</div>
-
+<div id="deletebutton" data-owner="<%=username%>" class="button-negative button-block">Delete User</div>
 
 </div>
 
