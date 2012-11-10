@@ -285,8 +285,10 @@ var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callb
 
       var plantUsername = plantThing.username;
       getPlant(plantUsername, function(err, plantData) {
-        console.log('got back plant data', plantData);
-        plantDataMap[plantUsername] = plantData;
+        console.log('got back plant data', plantData, 'username1', plantData.username, '2', plantUsername);
+
+        // poor mans clone operation, LOL
+        plantDataMap[plantData.username] = JSON.parse(JSON.stringify(plantData));
         console.log('plant map is now', plantDataMap);
         if (_.keys(plantDataMap).length == numPlantsToGet) {
           callback(err, userData, plantDataMap);
