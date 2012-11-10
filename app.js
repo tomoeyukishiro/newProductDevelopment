@@ -35,7 +35,6 @@ var postRoutes = require('./postroutes');
 // require routes after starting up server so node-twilio doesn't make a new express server on a random port.
 
 app.get('/', routes.index);
-app.get('/about', routes.about);
 app.get('/signup', routes.signup);
 app.get('/listusers', routes.listusers);
 app.get('/listplants', routes.listplants);
@@ -45,7 +44,6 @@ app.get('/plant/:plantname', routes.plant);
 // post methods
 app.post('/signup', postRoutes.signup);
 app.post('/water_plant', postRoutes.water_plant);
-app.post('/text_user', postRoutes.text_user);
 app.post('/delete_user', postRoutes.delete_user);
 app.post('/make_plant', postRoutes.make_plant);
 app.post('/delete_plant', postRoutes.delete_plant);
@@ -54,8 +52,7 @@ app.post('/delete_plant', postRoutes.delete_plant);
 app.get('/check_and_record', postRoutes.check_and_record);
 
 // mobile stuff
-app.get('/mobile_home', routes.mobile_home);
-app.get('/mobile_water_prompt', routes.mobile_water_prompt);
+app.get('/mp', routes.mobile_water_prompt);
 app.get('/mobile_water_after', routes.mobile_water_after);
 
 var port = process.env.PORT || 3600;

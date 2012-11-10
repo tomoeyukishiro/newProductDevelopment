@@ -271,6 +271,32 @@ var getPlant = exports.getPlant = function(username, callback) {
   });
 };
 
+var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callback) {
+  var plantDataMap = {};
+  console.log('getting plants for user', username);
+
+  getUser(username, function(err, userData) {
+    if (err) { callback(err); return; }
+
+    var numPlantsToGet = userData.plants.length;
+    // loop through the plants, actually kinda cool because
+    // its parallel fetching
+    _.each(userData.plants, function(plantThing) {
+
+      var plantUsername = plantThing.username;
+      getPlant(plantUsername, function(err, plantData) {
+        console.log('got back plant data', plantData);
+        plantDataMap[plantUsername] = plantData;
+        console.log('plant map is now', plantDataMap);
+        if (_.keys(plantDataMap).length == numPlantsToGet) {
+          callback(err, plantDataMap);
+        }
+      });
+
+    });
+  });
+};
+
 var setPlantShouldWater = exports.setPlantShouldWater = function(plant_username, value, callback) {
   setPlantGeneral(plant_username, 'shouldWater', value, callback);
 };

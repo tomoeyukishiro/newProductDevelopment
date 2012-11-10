@@ -78,9 +78,12 @@ exports.mobile_home = function(request, response) {
 };
 
 exports.mobile_water_prompt = function(request, response) {
-  var data = {
-    username: request.param('username') || 'enter_a_user'
-  };
+  var username = request.param('u');
+  if (!username) {
+    resposne.render('signup', {
+      error: 'No username there!'
+    });
+  }
 
   response.render('mobile_water_prompt', data);
 };

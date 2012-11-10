@@ -178,31 +178,19 @@ exports.check_and_record = function(request, response) {
 };
 
 function getWaterPathForUser(request, username) {
-  var dest = '/mobile_water_prompt';
+  var dest = '/mp';
   var fullPath = util.request.getHostPath(request) + dest;
-  var link = fullPath + '?username=' + username;
+  var link = fullPath + '?u=' + username;
 
   var shortenMap = {
-    'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=peter': 'http://bit.ly/PV0iGH',
-    'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=jill': 'http://bit.ly/VRk3fg'
+    //'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=peter': 'http://bit.ly/PV0iGH',
+    //'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=jill': 'http://bit.ly/VRk3fg'
   };
   if (shortenMap[link]) {
     link = shortenMap[link];
   }
   return link;
 }
-
-exports.text_user = function(request, response) {
-  var users = texting.userToPhone;
-
-  var username = request.param('username');
-  if (!username || !users[username]) {
-    response.send('That username "' + username + '" is not valid!');
-    return;
-  }
-
-  sendWaterTextToUser(username, request);
-};
 
 var sendWaterTextToUser = function(username, request, response) {
   var link = getWaterPathForUser(request, username);
