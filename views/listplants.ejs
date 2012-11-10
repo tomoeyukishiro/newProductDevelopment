@@ -19,7 +19,7 @@
           <a href="/plant/<%=plants[i]%>">
             <%= plants[i] %>
           </a>
-          <form action="/delete_plant" method="post" style="display:inline-block;">
+          <form action="/delete_plant" method="post" style="display:inline-block">
             <input name="plant_username" type="hidden" value="<%=plants[i]%>">
             <input type="submit" value="Delete Plant" style="background:red;color:white">
           </form>
