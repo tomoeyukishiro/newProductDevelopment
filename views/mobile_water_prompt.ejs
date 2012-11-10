@@ -1,0 +1,32 @@
+<%- partial('onedeep_topbar.ejs') %>
+
+<div class="content-padded">
+
+<h1 style="padding:10px;">
+    One of your Plants Need Watering <%= userData.name %>:
+</h1>
+
+<%= userDataString %>
+
+<ul class="list inset">
+  <% for (var i = 0; i < plantDatas.length; i++) { %>
+  <% var plantData = plantDatas[i] %>
+    <li>
+      <a href="/plant/<%=plantData.username%>" data-transition="slide-in">
+        <strong>
+          <%= plantData.name %>
+        </strong>
+        <% if (plantData.needsWater) { %>
+        	Needs water!!!
+        <% } %>
+        <span class="chevron"></span>
+      </a>
+    </li>
+  <% } %>
+</ul>
+
+
+</div>
+
+ <%- partial('standard_footer.ejs') %>
+ 
