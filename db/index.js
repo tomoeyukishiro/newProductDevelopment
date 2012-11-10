@@ -289,7 +289,7 @@ var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callb
         plantDataMap[plantUsername] = plantData;
         console.log('plant map is now', plantDataMap);
         if (_.keys(plantDataMap).length == numPlantsToGet) {
-          callback(err, plantDataMap);
+          callback(err, userData, plantDataMap);
         }
       });
 

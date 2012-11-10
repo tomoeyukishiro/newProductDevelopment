@@ -84,8 +84,24 @@ exports.mobile_water_prompt = function(request, response) {
       error: 'No username there!'
     });
   }
+  db.getUserAndAllPlants(username, function(err, userData, plantDataMap) {
+    console.log('rendering', arguments);
+    var plantDatas = [];
+    _.each(plantDataMap, function(plantData, key) {
+      plantDatas.push(plantData);
+    });
 
-  response.render('mobile_water_prompt', data);
+    var data = {
+      username: username,
+      userData: userData,
+      userDataString: JSON.stringify(userData),
+      plantDataMapString: JSON.stringify(plantDataMap),
+      plantDatasString: JSON.stringify(plantDatas),
+      plantDatas: plantDatas
+    };
+
+    response.render('mobile_water_prompt', data);
+  });
 };
 
 exports.mobile_water_after = function(request, response) {

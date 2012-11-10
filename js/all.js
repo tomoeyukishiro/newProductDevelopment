@@ -21,15 +21,29 @@ $(document).delegate('#deletePlantButton', 'click', function(ev) {
 
 $(document).delegate('#dryPlantButton', 'click', function(ev) {
   var username = $(ev.srcElement).attr('data-username');
+  $(ev.srcElement).fadeOut();
   // we need to make an ajax request
   $.get('/check_and_record', {
       moisture: 0,
       plant_username: username
     },
     function() {
-      console.log(arguments);
+      // go there
+      window.location.href = "/plant/" + username;
   });
+})
 
+$(document).delegate('#dryPlantButton', 'click', function(ev) {
+  $(ev.srcElement).fadeOut();
+  var username = $(ev.srcElement).attr('data-username');
+  // we need to make an ajax request
+  $.post('/water_plant', {
+      plant_username: username
+    },
+    function() {
+      // go there
+      window.location.href = "/plant/" + username;
+  });
 })
 
 
