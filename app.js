@@ -17,6 +17,7 @@ app.configure('development', function() {
 
   app.use('/lib/', express.static(__dirname + '/lib'));
   app.use('/css/', express.static(__dirname + '/css'));
+  app.use('/js/', express.static(__dirname + '/js'));
 
   app.use(express.bodyParser());
   app.use(app.router);

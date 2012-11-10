@@ -1,19 +1,16 @@
 <%- partial('navbar.ejs') %>
 
-<div class="hero-unit">
-  <h1>
-    Plant: <%= name %>
-  </h1>
-</div>
+<h1>
+	Plant: <%= name %>
+</h1>
 
-<div class="row-fluid">
-  <div class="span8">
-    <p> Data </p>
-    <p>
-      <%= dataString %>
-    </p>
-  </div>
-</div>
+<p>
+  <%= dataString %>
+</p>
+
+<form action="/delete_plant" method="post" style="display:none;">
+	<input name="plant_username" type="hidden" value="<%=username%>">
+</form>
 
  <%- partial('footer.ejs') %>
  

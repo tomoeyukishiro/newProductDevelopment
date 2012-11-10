@@ -1,33 +1,24 @@
-<%- partial('navbar.ejs') %>
+<%- partial('standard_topbar.ejs') %>
 
-<div class="hero-unit">
-  <h1>
+<div class="content-padded">
+
+<h1 style="padding:10px;">
     Our Awesome Plants:
-  </h1>
-</div>
+</h1>
 
-<div class="row-fluid">
-  <div class="span8">
-    <div>
-      <h2>
-        Current Plants
-      </h2>
+<ul class="list inset">
+  <% for (var i = 0; i < plants.length; i++) { %>
+    <li>
+      <a href="/plant/<%=plants[i]%>">
+        <strong>
+          <%= plants[i] %>
+        </strong>
+        <span class="chevron"></span>
+      </a>
+    </li>
+  <% } %>
+</ul>
 
-    <ul>
-      <% for (var i = 0; i < plants.length; i++) { %>
-        <li>
-          <a href="/plant/<%=plants[i]%>">
-            <%= plants[i] %>
-          </a>
-          <form action="/delete_plant" method="post" style="display:inline-block">
-            <input name="plant_username" type="hidden" value="<%=plants[i]%>">
-            <input type="submit" value="Delete Plant" style="background:red;color:white">
-          </form>
-        </li>
-      <% } %>
-    </ul>
-
-  </div>
 </div>
 
  <%- partial('footer.ejs') %>
