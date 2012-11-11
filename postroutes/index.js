@@ -149,7 +149,6 @@ exports.check_and_record = function(request, response) {
 
   // then compare against threshold
   db.getPlant(plant_username, function(err, plantData) {
-
     console.log('comparing moisture level of', moisture_level, 'to thres', plantData.moistureThreshold);
     if (Number(moisture_level) < Number(plantData.moistureThreshold)) {
       console.log('Its too dry!');

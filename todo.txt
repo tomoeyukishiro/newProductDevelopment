@@ -9,5 +9,5 @@ mobile app pages:
 - after water (yay, you have watered your plant. show history? last time watered? water dates array?)
 
 extra credit:
-- bitly shortening automagically!
+- nowjs data logging
 

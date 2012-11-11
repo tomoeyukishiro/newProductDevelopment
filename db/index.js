@@ -100,6 +100,7 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
     // first userid increment
     redis.incr(USER_ID, function(err, userID) {
       var user_data = _.extend(
+        {},
         USER_SCHEMA,
         metadata || {},
         {
@@ -252,6 +253,7 @@ var getUser = exports.getUser = function(username, callback) {
       callback(err, {});
     }
     var user_data = _.extend(
+      {},
       USER_SCHEMA,
       JSON.parse(value)
     );
@@ -265,6 +267,7 @@ var getPlant = exports.getPlant = function(username, callback) {
       callback(err, {});
     }
     callback(null, _.extend(
+      {},
       PLANT_SCHEMA,
       JSON.parse(value)
     ));
@@ -285,11 +288,10 @@ var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callb
 
       var plantUsername = plantThing.username;
       getPlant(plantUsername, function(err, plantData) {
-        console.log('got back plant data', plantData, 'username1', plantData.username, '2', plantUsername);
 
         // poor mans clone operation, LOL
         plantDataMap[plantData.username] = JSON.parse(JSON.stringify(plantData));
-        console.log('plant map is now', plantDataMap);
+
         if (_.keys(plantDataMap).length == numPlantsToGet) {
           callback(err, userData, plantDataMap);
         }
@@ -311,8 +313,11 @@ var setPlantGeneral = function(plant_username, key, value, callback) {
   getPlant(plant_username, function(err, plant_data) {
     if (err) { callback(err); return; }
 
+    console.log('setting this key', key, 'to value', value);
     plant_data[key] = value;
-    storePlant(plant_username, plant_data);
+    console.log('plant data is now', plant_data);
+
+    storePlant(plant_username, JSON.parse(JSON.stringify(plant_data)));
     callback(null);
   });
 };
