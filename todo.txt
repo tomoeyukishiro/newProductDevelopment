@@ -1,8 +1,13 @@
 TODO:
 
+REAL todo:
+- plant multiset function (to avoid these round trips crossing)
+- lastTexted() with UTC dates, have a bit to rate limit or not
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 get jquery $ in app and then make sure to extend deep copy schemas
 
-cookie storage, does username and then falls through to cookie
+cookie storage, does username and then falls through to cookie?
 
 mobile app pages:
 - plant view -- adjust dryness wanted here. see when last watered?

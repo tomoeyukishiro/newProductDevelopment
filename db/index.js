@@ -317,14 +317,35 @@ var setPlantGeneral = function(plant_username, key, value, callback) {
     plant_data[key] = value;
     console.log('plant data is now', plant_data);
 
-    storePlant(plant_username, JSON.parse(JSON.stringify(plant_data)));
-    callback(null);
+    storePlant(plant_username, JSON.parse(JSON.stringify(plant_data)), function(err, val) {
+      callback(err, val);  
+    });
   });
 };
 
-var storePlant = function(plant_username, data) {
+var setPlantMulti = function(plant_username, keys, values, callback) {
+  getPlant(plant_username, function(err, plant_data) {
+    if (err) { callback(err); return; }
+
+    var newData = JSON.parse(JSON.stringify(plant_data));
+
+    _.each(keys, function(key, i) {
+      newData[key] = values[i];
+    });
+
+    storePlant(plant_username, JSON.parse(JSON.stringify(newData)), function(err, val) {
+      callback(err, val); 
+    });
+  });
+};
+
+var storePlant = function(plant_username, data, callback) {
   console.log('setting plant to', plant_username, 'data to', data);
-  redis.set(plant_username, JSON.stringify(data));
+  redis.set(plant_username, JSON.stringify(data), function(err, val) {
+    if (callback) {
+      callback(err, val)
+    }
+  });
 };
 
 var storeUser = function(username, data) {
