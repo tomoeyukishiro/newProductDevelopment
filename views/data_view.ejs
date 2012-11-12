@@ -119,6 +119,7 @@ function initD3() {
 
 function receivePointD3(level) {
   if (!chart) {
+    console.log('no chart :(');
     return;
   }
   recentData = recentData.slice(1);
