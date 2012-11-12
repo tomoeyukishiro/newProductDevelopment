@@ -11,7 +11,7 @@ exports.log = function(plant_username, value, callback) {
   db.redis.lpush(plantDataID, value, function(err, val) {
     if (val > 1000) {
       console.log('holy CRAP we have a lot of entries, clearing...');
-      db.redis.set(plantDataID, null, function() { 
+      db.redis.del(plantDataID, function() { 
         db.redis.lpush(plantDataID, value);
       });
     }
