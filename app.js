@@ -40,6 +40,7 @@ app.get('/listusers', routes.listusers);
 app.get('/listplants', routes.listplants);
 app.get('/user/:username', routes.user);
 app.get('/plant/:plantname', routes.plant);
+app.get('/data_view/:plantname', routes.data_view);
 
 // post methods
 app.post('/signup', postRoutes.signup);
@@ -60,4 +61,7 @@ var port = process.env.PORT || 3600;
 app.listen(port, function() {
   console.log('Listening on ' + port);
 });
+
+// init nowjs
+var mynow = require('./mynow');
 

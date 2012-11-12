@@ -1,6 +1,10 @@
 var db = require('../db');
+var mynow = require('../mynow');
 
 exports.log = function(plant_username, value, callback) {
+  // first log it for nowjs
+  mynow.pushData(plant_username, value);
+
   var plantDataID = db.getPlantDataID(plant_username);
 
   // just go add this value onto that list

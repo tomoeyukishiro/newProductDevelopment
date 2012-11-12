@@ -1,0 +1,135 @@
+<header class="bar-title">
+<a class="button-prev" href="/" data-ignore="push">
+	Home
+	</a>
+<h1 class="title">GreenThumb</h1>
+</header>
+
+
+<style>
+
+.chart rect {
+  fill: steelblue;
+  stroke: white;
+}
+</style>
+
+<div class="content">
+	<div class="content-padded">
+		Plant data view for <%= plant_username %>
+	</div>
+</div>
+
+<!-- lol hacky -->
+<div id="username" data-username="<%= plant_username %>" style="display:none"></div>
+<div id="recentData" data-recent="<%= recentData %>" style="display:none"></div>
+
+<script type="text/javascript" src="/nowjs/now.js"></script>
+<script type="text/javascript" src="/lib/underscore-min.js"></script>
+<script src="http://d3js.org/d3.v2.js"></script>
+
+<script type="text/javascript">
+
+var our_plant = null;
+var recentData = null;
+var svg = null;
+var chart = null;
+var y = null;
+
+$(document).ready(function() {
+	console.log('now is initialized');
+
+  our_plant = $('#username').attr('data-username');
+
+  recentData = $('#recentData').attr('data-recent');
+  recentData = JSON.parse(recentData);
+
+  temp = [];
+  _.each(recentData, function(numStr) {
+    temp.push(Number(numStr));
+  });
+  recentData = temp;
+
+	now.receiveData = function(username, value) {
+		console.log('plant username', username, 'got value', value);
+    // $('div.content-padded').append('<p> Value ' + value + '</p>');
+    receivePointD3(value);
+	};
+
+  // do horrible hacky to generate fake data :P
+
+  setInterval(function() {
+    var level = Math.round(Math.random() * 200 + 701);
+    $.get('/check_and_record', {
+      plant_username: our_plant,
+      moisture: level
+    });
+  }, 1000);
+
+  initD3();
+})
+
+
+function initD3() {
+  var numPoints = 10;
+
+  var width = Math.round($(window).width() * 0.9);
+  var height = Math.round($(window).height() * 0.6);
+
+  chart = d3.select('div.content-padded').append('svg')
+    .attr('class', 'chart')
+    .attr('width', width)
+    .attr('height', height)
+
+  y = d3.scale.linear()
+    .domain([0, d3.max(recentData)])
+    .range([0, height * 0.95]);
+
+  var widthPerBar = Math.round(width / (numPoints + 10));
+
+  // lines
+  chart.selectAll('line')
+    .data(y.ticks(10))
+  .enter().append('line')
+    .attr('y1', y)
+    .attr('y2', y)
+    .attr('x1', 0)
+    .attr('x2', width)
+    .style('stroke', '#ccc')
+
+  // add bars
+  chart.selectAll('rect')
+      .data(recentData)
+    .enter().append('rect')
+      .attr('y', 0)
+      .attr('x', function(d, i) { return i * widthPerBar; })
+      .attr('width', widthPerBar)
+      .attr('height', y)
+
+  chart.selectAll('.rule')
+      .data(y.ticks(10))
+    .enter().append('text')
+      .attr('class', 'rule')
+      .attr('x', width)
+      .attr('y', y)
+      .attr('dx', -15)
+      .attr('text-anchor', 'middle')
+      .text(String);
+}
+
+function receivePointD3(level) {
+  if (!chart) {
+    return;
+  }
+  recentData = recentData.slice(1);
+  recentData.push(level);
+
+  chart.selectAll('rect')
+      .data(recentData)
+    .transition()
+      .duration(400) 
+      .attr('height', y);
+}
+
+</script>
+

@@ -1,16 +1,10 @@
 TODO:
-
-REAL todo:
-- lastTexted() with UTC dates, have a bit to rate limit or not
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-get jquery $ in app and then make sure to extend deep copy schemas
-
-cookie storage, does username and then falls through to cookie?
+get jquery $ in app and then make sure to extend deep copy schemas?
 
 mobile app pages:
 - plant view -- adjust dryness wanted here. see when last watered?
-- after water (yay, you have watered your plant. show history? last time watered? water dates array?)
 
 extra credit:
 - nowjs data logging

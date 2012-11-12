@@ -1,6 +1,7 @@
 var redis = require('../myredis');
 var db = require('../db');
 var _ = require('underscore');
+var moisturelogging = require('../moisturelogging');
 
 exports.index = function(request, response) {
   response.render('index');
@@ -58,7 +59,6 @@ exports.user = function(request, response, username) {
 
 exports.plant = function(request, response) {
   var plant_username = request.param('plantname');
-  console.log('the plantname', plant_username);
 
   db.getPlant(plant_username, function(err, data) {
     response.render('showplant', {
@@ -71,6 +71,16 @@ exports.plant = function(request, response) {
   });
 };
 
+exports.data_view = function(request, response) {
+  var plant_username = request.param('plantname');
+
+  moisturelogging.getRecentPlantData(plant_username, function(err, recentData) { 
+    response.render('data_view', {
+      plant_username: plant_username,
+      recentData: JSON.stringify(recentData)
+    });
+  });
+};
 
 exports.mobile_water_prompt = function(request, response) {
   var username = request.param('u');
