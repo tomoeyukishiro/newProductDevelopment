@@ -2,6 +2,7 @@ var db = require('../db');
 var texting = require('../texting');
 var routes = require('../routes');
 var util = require('../util');
+var moistureLogging = require('../moisturelogging');
 
 exports.signup = function(request, response) {
   var name = request.param('name');
@@ -114,12 +115,7 @@ exports.make_plant = function(request, response) {
 };
 
 exports.water_plant = function(request, response) {
-  // queue stuff...
   var plant_username = request.param('plant_username');
-  if (!plant_username) {
-    console.log('WARNING assuming plant username of plant-jack');
-    plant_username = 'plant-jack';
-  }
 
   // need to set the field
   db.setPlantShouldWater(plant_username, true, function(err) {
@@ -164,10 +160,15 @@ exports.check_and_record = function(request, response) {
   }
 
   // do two things -- first add this data point
-  // TODO
+  moistureLogging.log(plant_username, Number(moisture_level));
 
   // then compare against threshold
   db.getPlant(plant_username, function(err, plantData) {
+    if (err || !plantData) {
+      resposne.send(String(err) + String(plantData) + 'one of those is bad');
+      return;
+    }
+
     var needToSet = false;
     var toSend = false;
     var needsWater = plantData.needsWater;
@@ -184,12 +185,17 @@ exports.check_and_record = function(request, response) {
         needsWater = true;
         needToSet = true;
       }
+    } else {
+      console.log('plant ' + plant_username + ' has plenty of water');
+      needsWater = false;
+      if (needsWater !== plantData.needsWater) { 
+        needToSet = true;
+      }
     }
 
     // here we return the boolean if it should water or not
     if (plantData.shouldWater) {
       shouldWater = false;
-      needsWater = false;
       toSend = true;
       needToSet = true;
     }
@@ -213,13 +219,6 @@ function getWaterPathForUser(request, username) {
   var fullPath = util.request.getHostPath(request) + dest;
   var link = fullPath + '?u=' + username;
 
-  var shortenMap = {
-    //'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=peter': 'http://bit.ly/PV0iGH',
-    //'http://radiant-atoll-9524.herokuapp.com/mobile_water_prompt?username=jill': 'http://bit.ly/VRk3fg'
-  };
-  if (shortenMap[link]) {
-    link = shortenMap[link];
-  }
   return link;
 }
 
