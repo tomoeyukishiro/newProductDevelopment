@@ -129,6 +129,25 @@ exports.water_plant = function(request, response) {
   });
 };
 
+exports.toggle_text_limiting = function(request, response) {
+  var username = request.param('username');
+  var value = request.param('value');
+  if (!username || value === null) {
+    response.render('signup', {
+      error: 'no username or value specified!'
+    });
+    return;
+  }
+  // wtf boolean string conversion... :(
+  value = (value == 'false') ? false : true;
+
+  db.setUserGeneral(username, 'limitTexts', value, function(err, val) {
+    if (err) { response.send('error: ' + String(err)); return; }
+    
+    response.send('success');
+  });
+};
+
 exports.check_and_record = function(request, response) {
   var plant_username = request.param('plant_username');
   if (!plant_username) {
@@ -159,6 +178,7 @@ exports.check_and_record = function(request, response) {
       console.log('Its too dry!');
       // only text if we haven't texted before, inferred by the 'needs water' thing
       if (!plantData.needsWater) {
+        console.log('needs water is falsey, so lets go send a text and set needsWater to true');
         sendWaterTextToUser(plantData.owner, request);
 
         needsWater = true;

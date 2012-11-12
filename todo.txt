@@ -1,7 +1,6 @@
 TODO:
 
 REAL todo:
-- plant multiset function (to avoid these round trips crossing)
 - lastTexted() with UTC dates, have a bit to rate limit or not
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

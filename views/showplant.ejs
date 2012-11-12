@@ -20,23 +20,42 @@
 	<input name="plant_username" type="hidden" value="<%=username%>">
 </form>
 
-<p style="margin:20px">
-	<div id="dryPlantButton"
-	data-username="<%=username%>" 
-	data-owner="<%=data.owner%>"
-	class="button-positive button-block">
-		Pretend Plant is dry (and text owner)
-	</div>
-</p>
+<% if (!data.needsWater) { %>
+	<p style="margin:20px">
+		<div id="dryPlantButton"
+		data-username="<%=username%>" 
+		data-owner="<%=data.owner%>"
+		class="button-positive button-block">
+			Pretend Plant is dry (and text owner)
+		</div>
+	</p>
+<% } else { %>
+	<p style="margin:20px">
+		<div id="dryPlantButton"
+		data-username="<%=username%>" 
+		data-owner="<%=data.owner%>"
+		class="button-positive button-block" style="opacity:0.7">
+			Plant is Already Dry (re-text owner)
+		</div>
+	</p>
+<% } %>
 
-<p style="margin:20px">
-	<div id="dryPlantButton"
-	data-username="<%=username%>" 
-	data-owner="<%=data.owner%>"
-	class="button-main button-block">
-		Water Plant
-	</div>
-</p>
+<% if (!data.shouldWater) { %>
+	<p style="margin:20px">
+		<div id="dryPlantButton"
+		data-username="<%=username%>" 
+		data-owner="<%=data.owner%>"
+		class="button-main button-block">
+			Water Plant
+		</div>
+	</p>
+<% } else { %>
+	<p style="margin:20px">
+		<div class="button-main button-block" style="opacity:0.7">
+			Plant Scheduled for Water
+		</div>
+	</p>
+<% } %>
 
 
 <p style="margin:20px">

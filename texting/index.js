@@ -2,6 +2,8 @@ var TwilioClient = require('../node-twilio').Client;
 var appModule = require('../app.js');
 var db = require('../db');
 
+var MIN_TIME_TO_TEXT = 5 * 60; // 5 minutes
+
 // grab the express app and port so twilio client doesnt make a new server
 // which throws on heroku due to port binding
 var app = appModule.app;
@@ -39,6 +41,19 @@ exports.sendTextToUser = function(username, body, callback) {
       console.log('WARNING no number for ', username);
       return;
     }
+
+    var last = userData.lastTexted;
+    console.log('last texted', last);
+
+    if (last) {
+      var secondsSince = (new Date() - new Date(last)) / 1000;
+      console.log('its been x seconds', secondsSince);
+      if (secondsSince < MIN_TIME_TO_TEXT && userData.limitTexts) {
+        console.log('too early im returning');
+        return;
+      }
+    }
+
     var phoneNumber = userData.phoneNumber;
 
     phone.setup(function() {
@@ -48,8 +63,13 @@ exports.sendTextToUser = function(username, body, callback) {
       phone.sendSms(phoneNumber, body, options, function(reqParams, response) {
         console.log('sent text, req params');
         console.log(reqParams);
-        console.log('response was');
-        console.log(response);
+
+        // here we split requests, because texting is only when plants are dry,
+        // and there are no operations on userData. and we don't even block on
+        // the texting anyways in the actual method. so this is hacky, but fine
+        // for an MVP
+        db.setUserLastTexted(username);
+
         callback(null, response);
       });
     });

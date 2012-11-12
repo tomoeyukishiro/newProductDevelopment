@@ -48,7 +48,8 @@ var USER_SCHEMA = {
   createTime: null,
   name: null,
   username: null,
-  phoneNumber: null
+  phoneNumber: null,
+  limitTexts: false
 };
 
 /* Plants is in the form of
@@ -323,15 +324,18 @@ var setPlantGeneral = function(plant_username, key, value, callback) {
   });
 };
 
-var setPlantMulti = function(plant_username, keys, values, callback) {
+var setPlantMulti = exports.setPlantMulti = function(plant_username, keys, values, callback) {
   getPlant(plant_username, function(err, plant_data) {
     if (err) { callback(err); return; }
 
     var newData = JSON.parse(JSON.stringify(plant_data));
 
+    console.log('new data before', newData);
     _.each(keys, function(key, i) {
+      console.log('setting key', key, 'to value', values[i]);
       newData[key] = values[i];
     });
+    console.log('after', newData);
 
     storePlant(plant_username, JSON.parse(JSON.stringify(newData)), function(err, val) {
       callback(err, val); 
@@ -348,9 +352,37 @@ var storePlant = function(plant_username, data, callback) {
   });
 };
 
-var storeUser = function(username, data) {
+var storeUser = function(username, data, callback) {
   console.log('setting user', username, ' data to', data);
-  redis.set(username, JSON.stringify(data));
+  redis.set(username, JSON.stringify(data), function(err, val) {
+    if (callback) { callback(err, val); }
+  });
+};
+
+var setUserLastTexted = exports.setUserLastTexted = function(username, callback) {
+  setUserGeneral(username, 'lastTexted', new Date().toUTCString(), callback);
+};
+
+var setUserGeneral = exports.setUserGeneral = function(username, key, val, callback) {
+  setUserMulti(username, [key], [val], callback);
+};
+
+var setUserMulti = exports.setUserMulti = function(username, keys, values, callback) {
+  var callbackWrap = function(err, val) {
+    console.log('inside callback wrap');
+    if (callback) { callback(err, val); console.log('called back'); }
+  };
+
+  getUser(username, function(err, userData) {
+    if (err) { callbackWrap(err); return; }
+    userData = JSON.parse(JSON.stringify(userData));
+
+    _.each(keys, function(key, i) {
+      userData[key] = values[i];
+    });
+
+    storeUser(username, userData, callbackWrap);
+  });
 };
 
 var deletePlant = exports.deletePlant = function(plant_username, callback) {

@@ -47,6 +47,7 @@ app.post('/water_plant', postRoutes.water_plant);
 app.post('/delete_user', postRoutes.delete_user);
 app.post('/make_plant', postRoutes.make_plant);
 app.post('/delete_plant', postRoutes.delete_plant);
+app.post('/toggle_text_limiting', postRoutes.toggle_text_limiting);
 
 // POST method as a Get, hacky but easier for arduino
 app.get('/check_and_record', postRoutes.check_and_record);

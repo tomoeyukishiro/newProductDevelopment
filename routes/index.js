@@ -72,11 +72,6 @@ exports.plant = function(request, response) {
 };
 
 
-/************ Mobile ***********/
-exports.mobile_home = function(request, response) {
-  response.render('mobile_home', {});
-};
-
 exports.mobile_water_prompt = function(request, response) {
   var username = request.param('u');
   if (!username) {

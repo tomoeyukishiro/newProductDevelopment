@@ -39,6 +39,12 @@
 
 <div id="makebutton" data-owner="<%=username%>" class="button-main button-block">Make Plant</div>
 
+<% if (data.limitTexts) { %>
+  <div id="toggleTextButton" data-username="<%=username%>" data-value="false" class="button-positive button-block">Turn off text limiting </div>
+<% } else { %>
+  <div id="toggleTextButton" data-username="<%=username%>" data-value="true" class="button-positive button-block">Limit Text Rate</div>
+<% } %>
+
 <p> Data </p>
 <p>
   <%= dataString %>
