@@ -1,11 +1,6 @@
 TODO:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-get jquery $ in app and then make sure to extend deep copy schemas?
-
 mobile app pages:
 - plant view -- adjust dryness wanted here. see when last watered?
-
-extra credit:
-- nowjs data logging
 
