@@ -149,30 +149,42 @@ exports.check_and_record = function(request, response) {
 
   // then compare against threshold
   db.getPlant(plant_username, function(err, plantData) {
+    var needToSet = false;
+    var toSend = false;
+    var needsWater = plantData.needsWater;
+    var shouldWater = plantData.shouldWater;
+
     console.log('comparing moisture level of', moisture_level, 'to thres', plantData.moistureThreshold);
     if (Number(moisture_level) < Number(plantData.moistureThreshold)) {
       console.log('Its too dry!');
       // only text if we haven't texted before, inferred by the 'needs water' thing
       if (!plantData.needsWater) {
         sendWaterTextToUser(plantData.owner, request);
-        db.setPlantNeedsWater(plant_username, true, function() {});
+
+        needsWater = true;
+        needToSet = true;
       }
     }
 
     // here we return the boolean if it should water or not
     if (plantData.shouldWater) {
-      db.setPlantShouldWater(plant_username, false, function(err) {
-        if (err) { response.send(String(err)); return; }
-        // also say it doesnt need water anymore
-        db.setPlantNeedsWater(plant_username, false, function() {});
-
-        // now we send a true to make arduino water
-        response.send('true');
-      });
+      shouldWater = false;
+      needsWater = false;
+      toSend = true;
+      needToSet = true;
+    }
+    
+    // easiest case
+    if (!needToSet) {
+      response.send(String(toSend));
       return;
     }
-    // otherwise its easy, just send false
-    response.send('false');
+    // ok do a multi set
+    db.setPlantMulti(plant_username, ['needsWater', 'shouldWater'], [needsWater, shouldWater], function(err, val) {
+      if (err) { response.send(String(err)); return; }
+
+      response.send(String(toSend));
+    });
   });
 };
 
