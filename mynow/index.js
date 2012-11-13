@@ -12,6 +12,9 @@ nowjs.on('connect', function() {
 });
 
 exports.pushData = function(plant_username, value) {
-  everyone.now.receiveData(plant_username, value);
+  if (everyone && everyone.now && everyone.now.receiveData) {
+    // make sure someone is connected
+    everyone.now.receiveData(plant_username, value);
+  }
 };
 
