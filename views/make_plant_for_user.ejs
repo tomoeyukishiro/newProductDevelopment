@@ -1,0 +1,31 @@
+<header class="bar-title">
+  <a class="button-prev" href="/user/<%=username%>" data-transition="slide-out">
+  <%= name %>
+  </a>
+  <h1 class="title">GreenThumb</h1>
+</header>
+
+<div class="content"> 
+
+
+<div class="content-padded">
+
+
+<h1>
+  <%= name %>
+</h1>
+
+<h2> Make a plant for this user </h2>
+
+<form id="make_plant_form_<%=username%>" action="/make_plant" method="post">
+  <div class="input-group">
+    <input name="owner" type="hidden" value="<%=username%>">
+    <input name="name" type="text" placeholder="Name of Plant">
+  </div>
+</form>
+
+<div id="makebutton" data-owner="<%=username%>" class="button-main button-block">Make Plant</div>
+
+</div>
+
+<%- partial('standard_footer.ejs') %>

@@ -39,6 +39,7 @@ app.get('/signup', routes.signup);
 app.get('/listusers', routes.listusers);
 app.get('/listplants', routes.listplants);
 app.get('/user/:username', routes.user);
+app.get('/make_plant_for_user/:username', routes.make_plant_for_user);
 app.get('/plant/:plantname', routes.plant);
 app.get('/data_view/:plantname', routes.data_view);
 

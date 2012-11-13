@@ -3,6 +3,9 @@
   Users
   </a>
   <h1 class="title">GreenThumb</h1>
+  <a class="button-next" href="/make_plant_for_user/<%=username%>" data-transition="slide-in">
+  Make Plant
+  </a>
 </header>
 
 <div class="content"> 
@@ -15,7 +18,7 @@
   </h1>
 
 
-<h2> Plants this user owns: </h2>
+<h4> Plants this user owns: </h4>
 
 <ul class="list inset">
   <% for (var i = 0; i < data.plants.length; i++) { %>
@@ -28,16 +31,6 @@
   <% } %>
 </ul>
 
-<h2> Make a plant for this user </h2>
-
-<form id="make_plant_form_<%=username%>" action="/make_plant" method="post">
-  <div class="input-group">
-    <input name="owner" type="hidden" value="<%=username%>">
-    <input name="name" type="text" placeholder="Name of Plant">
-  </div>
-</form>
-
-<div id="makebutton" data-owner="<%=username%>" class="button-main button-block">Make Plant</div>
 
 <% if (data.limitTexts) { %>
   <div id="toggleTextButton" data-username="<%=username%>" data-value="false" class="button-positive button-block">Turn off text limiting </div>

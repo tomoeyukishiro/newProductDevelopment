@@ -57,6 +57,20 @@ exports.user = function(request, response, username) {
   });
 };
 
+exports.make_plant_for_user = function(request, response) {
+  var username = request.param('username');
+
+  db.getUser(username, function(err, data) {
+    response.render('make_plant_for_user', {
+      error: String(err),
+      username: username,
+      name: data.name,
+      data: data,
+      dataString: JSON.stringify(data)
+    });
+  });
+};
+
 exports.plant = function(request, response) {
   var plant_username = request.param('plantname');
 
