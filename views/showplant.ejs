@@ -23,6 +23,7 @@
 	<input name="plant_username" type="hidden" value="<%=username%>">
 </form>
 
+
 <% if (!data.needsWater) { %>
 	<p style="margin:20px">
 		<div id="dryPlantButton"
@@ -58,6 +59,33 @@
 			Plant Scheduled for Water
 		</div>
 	</p>
+<% } %>
+
+<% if (data.moistureThreshold !== 500) { %>
+			<div id="setPlantMoistureButton"
+			data-username="<%=username%>"
+			data-moisture="500"
+			class="button-positive button-block">
+				Set Moisture Threshold to 500 (low)
+			</div>
+<% } %>
+
+<% if (data.moistureThreshold !== 700) { %>
+		<div id="setPlantMoistureButton"
+		data-username="<%=username%>"
+		data-moisture="700"
+		class="button-positive button-block">
+			Set Moisture Threshold to 700 (medium)
+		</div>
+<% } %>
+
+<% if (data.moistureThreshold !== 900) { %>
+		<div id="setPlantMoistureButton"
+		data-username="<%=username%>"
+		data-moisture="900"
+		class="button-positive button-block">
+			Set Moisture Threshold to 900 (high)
+		</div>
 <% } %>
 
 

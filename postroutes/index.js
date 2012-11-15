@@ -92,6 +92,17 @@ exports.delete_plant = function(request, response) {
   });
 };
 
+exports.change_plant = function(request, response) {
+  // only supports moisture so far
+  var plant_username = request.param('plant_username');
+  var moisture = Number(request.param('moisture'));
+
+  db.setPlantGeneral(plant_username, 'moistureThreshold', moisture, function(err) {
+    if (err) { response.send(String(err)); }
+    response.send(true);
+  });
+};
+
 exports.make_plant = function(request, response) {
   var owner = request.param('owner');
   var plant_name = request.param('name');

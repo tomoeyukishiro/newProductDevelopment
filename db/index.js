@@ -310,7 +310,7 @@ var setPlantNeedsWater = exports.setPlantNeedsWater = function(plant_username, v
   setPlantGeneral(plant_username, 'needsWater', value, callback);
 };
 
-var setPlantGeneral = function(plant_username, key, value, callback) {
+var setPlantGeneral = exports.setPlantGeneral = function(plant_username, key, value, callback) {
   getPlant(plant_username, function(err, plant_data) {
     if (err) { callback(err); return; }
 
