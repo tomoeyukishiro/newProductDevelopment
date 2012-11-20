@@ -125,19 +125,19 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
 
 var addPlantToUser = function(plant_username, owner_username, plant_data, callback) {
   console.log('adding plant', plant_username, 'to this owner', owner_username, plant_data);
-  getUser(owner_username, function(err, user_data) {
-    if (err) {
-      callback(err);
-      return;
-    }
-
+  Q.ncall(getUser, this, owner_username)
+  .then(function(user_data) {
     user_data.plants.push({
       username: plant_data.username,
       name: plant_data.name
     });
     storeUser(owner_username, user_data);
     callback();
-  });
+  })
+  .fail(function(err) {
+    callback(err);
+  })
+  .done();
 };
 
 var removePlantFromUser = function(plant_username, owner_username) {

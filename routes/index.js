@@ -84,7 +84,7 @@ exports.make_plant_for_user = function(request, response) {
 exports.plant = function(request, response) {
   var plant_username = request.param('plantname');
 
-  Q.ncall(db.getPlan, db, plant_username)
+  Q.ncall(db.getPlant, db, plant_username)
   .then(function(data) {
     response.render('showplant', {
       username: plant_username,
@@ -93,11 +93,12 @@ exports.plant = function(request, response) {
       data: data
     });
   })
-  .fail(generalFail(response))
+  //.fail(generalFail(response))
   .done();
 };
 
 exports.data_view = function(request, response) {
+
   var plant_username = request.param('plantname');
 
   Q.ncall(moistureLogging.getRecentPlantData, moistureLogging, plant_username)
