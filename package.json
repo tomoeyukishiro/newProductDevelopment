@@ -6,7 +6,8 @@
     "redis-url": "0.1.0",
     "ejs": "~0.7.1",
     "underscore": "latest",
-    "now": "latest"
+    "now": "latest",
+    "q": "latest"
   },
   "engines": {
     "node": "0.8.x",
