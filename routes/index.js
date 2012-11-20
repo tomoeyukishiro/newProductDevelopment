@@ -101,7 +101,7 @@ exports.data_view = function(request, response) {
 
   var plant_username = request.param('plantname');
 
-  Q.ncall(moistureLogging.getRecentPlantData, moistureLogging, plant_username)
+  Q.ncall(moisturelogging.getRecentPlantData, moisturelogging, plant_username)
   .then(function(recentData) {
     response.render('data_view', {
       plant_username: plant_username,

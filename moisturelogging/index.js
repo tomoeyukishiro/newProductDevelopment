@@ -1,5 +1,6 @@
 var db = require('../db');
 var mynow = require('../mynow');
+var Q = require('q');
 
 exports.log = function(plant_username, value, callback) {
   // first log it for nowjs
@@ -7,11 +8,12 @@ exports.log = function(plant_username, value, callback) {
 
   var plantDataID = db.getPlantDataID(plant_username);
 
-  // just go add this value onto that list
-  db.redis.lpush(plantDataID, value, function(err, val) {
+  Q.ncall(db.redis.lpush, db.redis, plantDataID, value)
+  .then(function(val) {
     if (val > 1000) {
       console.log('holy CRAP we have a lot of entries, clearing...');
-      db.redis.del(plantDataID, function() { 
+      Q.ncall(db.redis.del, db.redis, plantDataID)
+      .then(function() {
         db.redis.lpush(plantDataID, value);
       });
     }
@@ -19,7 +21,12 @@ exports.log = function(plant_username, value, callback) {
     if (callback) {
       callback(err, val);
     }
-  });
+  })
+  .fail(function(err) {
+    console.log('error while logging moisture!!');
+    callback(err);
+  })
+  .done();
 };
 
 exports.getRecentPlantData = function(plant_username, callback) {
