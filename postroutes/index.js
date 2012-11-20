@@ -3,6 +3,7 @@ var texting = require('../texting');
 var routes = require('../routes');
 var util = require('../util');
 var moistureLogging = require('../moisturelogging');
+var Q = require('q');
 
 exports.signup = function(request, response) {
   var name = request.param('name');
@@ -37,24 +38,18 @@ exports.signup = function(request, response) {
   var metadata = {
     phoneNumber: phone
   };
-  db.makeUser(name, metadata, function(err) {
-      if (err) {
-        console.log('err on signup', err);
-        response.render('signup', {
-          error: String(err)
-        });
-        return;
-      }
-
-      // ok now just render success
-      routes.listusers(request, response);
-  });
+  Q.ncall(db.makeUser, db, name, metadata)
+  .then(function() {
+    // ok now just render success
+    routes.listusers(request, response);
+  })
+  .fail(util.errorPage(response))
+  .done();
 };
 
 exports.delete_user = function(request, response) {
   var username = request.param('username');
   if (!username) {
-    // TODO different parent
     response.render('signup', {
       error: 'No username for delete!'
     });

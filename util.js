@@ -22,3 +22,9 @@ exports.promiseDelay = function(ms) {
   };
 };
 
+exports.errorPage = function(response) {
+  return function(err) {
+    response.render('signup', {error: err});
+  };
+};
+

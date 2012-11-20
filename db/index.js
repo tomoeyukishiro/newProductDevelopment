@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var redis = require('../myredis').redis;
+var Q = require('q');
+
 // make available for low level stuff
 exports.redis = redis;
 
@@ -84,41 +86,41 @@ var makeUser = exports.makeUser = function(name, metadata, callback) {
     callback('bad username!');
   }
 
-  // test if it exists
-  redis.sismember(USERS, username, function(err, result) {
-    if (err) {
-      callback(err);
-      return;
-    }
+  Q.ncall(redis.sismember, redis, USERS, username)
+  .then(function(result) {
     if (result) {
-      callback('That username exists already!');
+      callback('That username already exists!');
       return;
     }
-
+  })
+  .then(function() {
     // now make it
     console.log('making user ', username);
+    return Q.ncall(redis.incr, redis, USER_ID);
+  })
+  .then(function(userID) {
+    var user_data = _.extend(
+      {},
+      USER_SCHEMA,
+      metadata || {},
+      {
+        userID: userID,
+        name: name,
+        username: username,
+        createTime: new Date().toString(),
+        plants: []
+      }
+    );
 
-    // first userid increment
-    redis.incr(USER_ID, function(err, userID) {
-      var user_data = _.extend(
-        {},
-        USER_SCHEMA,
-        metadata || {},
-        {
-          userID: userID,
-          name: name,
-          username: username,
-          createTime: new Date().toString(),
-          plants: []
-        }
-      );
+    redis.set(username, JSON.stringify(user_data));
+    redis.sadd(USERS, username);
 
-      redis.set(username, JSON.stringify(user_data));
-      redis.sadd(USERS, username);
-
-      callback();
-    });
-  });
+    callback();
+  })
+  .fail(function(err) {
+    callback(err);
+  })
+  .done();
 };
 
 var addPlantToUser = function(plant_username, owner_username, plant_data, callback) {

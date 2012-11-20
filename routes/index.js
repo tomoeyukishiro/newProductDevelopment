@@ -5,12 +5,7 @@ var moisturelogging = require('../moisturelogging');
 var Q = require('q');
 var util = require('../util');
 
-var generalFail = function(response) {
-  return function(err) {
-    console.log('request failed for ', err);
-    response.render('signup', {error: err});
-  };
-};
+var generalFail = util.errorPage;
 
 exports.index = function(request, response) {
   response.render('index');
