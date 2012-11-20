@@ -292,12 +292,11 @@ var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callb
   var plantDataMap = {};
   console.log('getting plants for user', username);
 
-  getUser(username, function(err, userData) {
-    if (err) { callback(err); return; }
-
+  Q.ncall(getUser, this, username)
+  .then(function(userData) {
     var numPlantsToGet = userData.plants.length;
     // loop through the plants, actually kinda cool because
-    // its parallel fetching
+    // its parallel fetching!
     _.each(userData.plants, function(plantThing) {
 
       var plantUsername = plantThing.username;
@@ -310,9 +309,12 @@ var getUserAndAllPlants = exports.getUserAndAllPlants = function(username, callb
           callback(err, userData, plantDataMap);
         }
       });
-
     });
-  });
+  })
+  .fail(function(err) {
+    callback(err);
+  })
+  .done();
 };
 
 var setPlantShouldWater = exports.setPlantShouldWater = function(plant_username, value, callback) {

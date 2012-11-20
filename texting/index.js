@@ -1,6 +1,7 @@
 var TwilioClient = require('../node-twilio').Client;
 var appModule = require('../app.js');
 var db = require('../db');
+var Q = require('q');
 
 var MIN_TIME_TO_TEXT = 5 * 60; // 5 minutes
 
@@ -31,15 +32,13 @@ var client = exports.client = new TwilioClient(
 var phone = exports.phone = client.getPhoneNumber('+14085969236');
 
 exports.sendTextToUser = function(username, body, callback) {
-  db.getUser(username, function(err, userData) {
-    if (err) {
-      callback(err);
-      return;
-    }
+  var phoneNumber = null;
+
+  Q.ncall(db.getUser, db, username)
+  .then(function(userData) {
     if (!userData || !userData.phoneNumber) {
-      callback('A phone number for that user doesnt exist!');
       console.log('WARNING no number for ', username);
-      return;
+      throw new Error('A phone number for that user doesnt exist!');
     }
 
     var last = userData.lastTexted;
@@ -49,30 +48,40 @@ exports.sendTextToUser = function(username, body, callback) {
       var secondsSince = (new Date() - new Date(last)) / 1000;
       console.log('its been x seconds', secondsSince);
       if (secondsSince < MIN_TIME_TO_TEXT && userData.limitTexts) {
-        console.log('too early im returning');
-        return;
+        throw new Error('too early im returning');
       }
     }
 
-    var phoneNumber = userData.phoneNumber;
+    phoneNumber = userData.phoneNumber;
 
-    phone.setup(function() {
-      // now phone works
-      var options = {};
+    var deferred = Q.defer();
+    phone.setup(deferred.resolve);
+    return deferred.promise;
+  })
+  .then(function(str) {
+    // now phone works
+    var options = {};
 
-      phone.sendSms(phoneNumber, body, options, function(reqParams, response) {
-        console.log('sent text, req params');
-        console.log(reqParams);
+    var deferred = Q.defer();
+    phone.sendSms(phoneNumber, body, options, deferred.resolve);
+    return deferred.promise;
+  })
+  .then(function(reqParams, response) {
+    console.log('sent text, req params');
+    console.log(reqParams);
 
-        // here we split requests, because texting is only when plants are dry,
-        // and there are no operations on userData. and we don't even block on
-        // the texting anyways in the actual method. so this is hacky, but fine
-        // for an MVP
-        db.setUserLastTexted(username);
+    // here we split requests, because texting is only when plants are dry,
+    // and there are no operations on userData. and we don't even block on
+    // the texting anyways in the actual method. so this is hacky, but fine
+    // for an MVP
+    db.setUserLastTexted(username);
 
-        callback(null, response);
-      });
-    });
-  });
+    callback(null, response);
+  })
+  .fail(function(err) {
+    console.log("ERROR!!!:", err);
+    callback(err);
+  })
+  .done();
 }
 
