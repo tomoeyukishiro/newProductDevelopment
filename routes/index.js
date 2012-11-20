@@ -5,6 +5,13 @@ var moisturelogging = require('../moisturelogging');
 var Q = require('q');
 var util = require('../util');
 
+var generalFail = function(response) {
+  return function(err) {
+    console.log('request failed for ', err);
+    response.render('signup', {error: err});
+  };
+};
+
 exports.index = function(request, response) {
   response.render('index');
 };
@@ -19,29 +26,26 @@ exports.signup = function(request, response) {
 
 exports.listusers = function(request, response) {
   
-  db.getAllUsers(function(err, users) {
-    var additionalMessage = '';
-    if (!users) {
-      users = [];
-      additionalMessage = 'uh oh!! error:' + String(err);
-    }
-
+  Q.ninvoke(db, 'getAllUsers')
+  .then(function(users) {
     response.render('listusers', {
       users: users,
-      additionalMessage: additionalMessage
+      additionalMessage: ''
     });
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.listplants = function(request, response) {
-  db.getAllPlants(function(err, plants) {
-    if (err) {
-      plants = [];
-    }
+  Q.ninvoke(db, 'getAllPlants')
+  .then(function(plants) {
     response.render('listplants', {
       plants: plants
     });
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.user = function(request, response, username) {
@@ -49,11 +53,11 @@ exports.user = function(request, response, username) {
   var data = null;
   console.log('the username', username);
 
-  var deferred = Q.ncall(db.getUser, db, username)
+  Q.ninvoke(db, 'getUser', username)
   .then(function(_data) {
     data = _data;
   })
-  //.then(util.promiseDelay(1000))
+  //.then(util.promiseDelay(300))
   .then(function() {
     response.render('showuser', {
       username: username,
@@ -61,48 +65,55 @@ exports.user = function(request, response, username) {
       data: data,
       dataString: JSON.stringify(data)
     });
-  }).fail(function(err) {
-    console.log('failed for reason', err);
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.make_plant_for_user = function(request, response) {
   var username = request.param('username');
 
-  db.getUser(username, function(err, data) {
+  Q.ncall(db.getUser, db, username)
+  .then(function(data) {
     response.render('make_plant_for_user', {
-      error: String(err),
       username: username,
       name: data.name,
       data: data,
       dataString: JSON.stringify(data)
     });
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.plant = function(request, response) {
   var plant_username = request.param('plantname');
 
-  db.getPlant(plant_username, function(err, data) {
+  Q.ncall(db.getPlan, db, plant_username)
+  .then(function(data) {
     response.render('showplant', {
-      error: err,
       username: plant_username,
       name: data.name,
       dataString: JSON.stringify(data),
       data: data
     });
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.data_view = function(request, response) {
   var plant_username = request.param('plantname');
 
-  moisturelogging.getRecentPlantData(plant_username, function(err, recentData) { 
+  Q.ncall(moistureLogging.getRecentPlantData, moistureLogging, plant_username)
+  .then(function(recentData) {
     response.render('data_view', {
       plant_username: plant_username,
       recentData: JSON.stringify(recentData)
     });
-  });
+  })
+  .fail(generalFail(response))
+  .done();
 };
 
 exports.mobile_water_prompt = function(request, response) {
