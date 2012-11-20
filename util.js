@@ -1,3 +1,5 @@
+var Q = require('q');
+
 exports.request = {};
 
 exports.request.getUrl = function(request) {
@@ -8,5 +10,15 @@ exports.request.getUrl = function(request) {
 exports.request.getHostPath = function(request) {
   var host = request.protocol + '://' + request.headers.host;
   return host;
+};
+
+exports.promiseDelay = function(ms) {
+  return function() {
+    ms = ms || 300;
+    var deferred = Q.defer();
+    setTimeout(deferred.resolve, ms);
+
+    return deferred.promise;
+  };
 };
 

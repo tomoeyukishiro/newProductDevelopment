@@ -2,6 +2,8 @@ var redis = require('../myredis');
 var db = require('../db');
 var _ = require('underscore');
 var moisturelogging = require('../moisturelogging');
+var Q = require('q');
+var util = require('../util');
 
 exports.index = function(request, response) {
   response.render('index');
@@ -44,16 +46,23 @@ exports.listplants = function(request, response) {
 
 exports.user = function(request, response, username) {
   var username = request.param('username') || username;
+  var data = null;
   console.log('the username', username);
 
-  db.getUser(username, function(err, data) {
+  var deferred = Q.ncall(db.getUser, db, username)
+  .then(function(_data) {
+    data = _data;
+  })
+  //.then(util.promiseDelay(1000))
+  .then(function() {
     response.render('showuser', {
-      error: err,
       username: username,
       name: data.name,
       data: data,
       dataString: JSON.stringify(data)
     });
+  }).fail(function(err) {
+    console.log('failed for reason', err);
   });
 };
 
