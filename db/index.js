@@ -141,11 +141,13 @@ var addPlantToUser = function(plant_username, owner_username, plant_data, callba
 };
 
 var removePlantFromUser = function(plant_username, owner_username) {
-  getUser(owner_username, function(err, user_data) {
+  Q.ncall(getUser, this, owner_username)
+  .then(function(user_data) {
     if (!user_data) {
       console.log('no user data for username', owner_username);
       return;
     }
+
     var newPlants = [];
     _.each(user_data.plants, function(plant) {
       if (plant.username !== plant_username) {
@@ -154,7 +156,11 @@ var removePlantFromUser = function(plant_username, owner_username) {
     });
     user_data.plants = newPlants;
     storeUser(owner_username, user_data);
-  });
+  })
+  .fail(function(err) {
+    console.log('error on removePlantFromUser', err);
+  })
+  .done();
 };
 
 var makePlant = exports.makePlant = function(plant_name, owner_username, callback) {
@@ -172,45 +178,50 @@ var makePlant = exports.makePlant = function(plant_name, owner_username, callbac
     return;
   }
 
-  redis.sismember(PLANTS, plant_username, function(err, result) {
-    if (err) {
-      callback(err);
-      return;
-    }
+  Q.ncall(redis.sismember, redis, PLANTS, plant_username)
+  .then(function(result) {
     if (result) {
+      // i need to stop! hmm...
       callback('plant username already exists, sorry');
       return;
     }
-    // check if user
-    isUser(owner_username, function(err, result) {
-      console.log('after checking if its a user', arguments);
-      if (!result) {
-        callback('that person is not a user' + owner_username);
-        return;
+    return Q.ncall(isUser, this, owner_username);
+  })
+  .then(function(result) {
+    console.log('after checking if its a user', arguments);
+    if (!result) {
+      callback('that person is not a user' + owner_username);
+      return;
+    }
+    return Q.ncall(redis.incr, redis, PLANT_ID);
+  })
+  .then(function(plantID) {
+    // now plant doesnt exist and user is valid, so go ahead and make plant
+    var plant_data = _.extend(
+      {},
+      PLANT_SCHEMA,
+      {
+        id: plantID,
+        name: plant_name,
+        username: plant_username,
+        owner: owner_username
       }
-      // now plant doesnt exist and user is valid, so go ahead and make plant
-      redis.incr(PLANT_ID, function(err, plantID) {
-        var plant_data = _.extend(
-          {},
-          PLANT_SCHEMA,
-          {
-            id: plantID,
-            name: plant_name,
-            username: plant_username,
-            owner: owner_username
-          }
-        );
-        redis.set(plant_username, JSON.stringify(plant_data));
-        redis.sadd(PLANTS, plant_username);
-        console.log('making this plant', plant_data);
-        // now add it to that owner
-        addPlantToUser(plant_username, owner_username, plant_data, function(err) {
-          console.log('added plant to user', err);
-          callback(err);
-        });
-      });
-    });
-  });
+    );
+    redis.set(plant_username, JSON.stringify(plant_data));
+    redis.sadd(PLANTS, plant_username);
+    console.log('making this plant', plant_data);
+
+    // now add it to that owner
+    return Q.ncall(addPlantToUser, this, plant_username, owner_username, plant_data);
+  })
+  .then(function() {
+    console.log('added plant to user');
+    callback();
+  })
+  .fail(function(err) {
+    callback(err);
+  })
+  .done();
 };
 
 var getAllUsers = exports.getAllUsers = function(callback) {
